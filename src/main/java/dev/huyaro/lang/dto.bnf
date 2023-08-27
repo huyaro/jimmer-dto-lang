@@ -49,7 +49,7 @@
   ]
 }
 
-file ::= importStatement* dtoType*
+dtoFile ::= importStatement* dtoType*
 importStatement ::=
     'import' Identifier ('.' Identifier)*
     (

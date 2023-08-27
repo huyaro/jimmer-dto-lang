@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.huyaro.lang"
-version = "0.0.1"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ intellij {
     type.set("IU") // Target IDE Platform
     downloadSources.set(false)
 
-    plugins.set(listOf("com.intellij.java"))
+    plugins.set(listOf())
 }
 
 tasks {
@@ -49,6 +49,6 @@ tasks {
     }
 
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        token.set(System.getenv("IDEA_PUBLISH_TOKEN"))
     }
 }

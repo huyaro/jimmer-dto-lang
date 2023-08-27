@@ -32,7 +32,7 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
-    return file(b, l + 1);
+    return dtoFile(b, l + 1);
   }
 
   /* ********************************************************** */
@@ -512,6 +512,40 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // importStatement* dtoType*
+  static boolean dtoFile(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoFile")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = dtoFile_0(b, l + 1);
+    r = r && dtoFile_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // importStatement*
+  private static boolean dtoFile_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoFile_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!importStatement(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dtoFile_0", c)) break;
+    }
+    return true;
+  }
+
+  // dtoType*
+  private static boolean dtoFile_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoFile_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!dtoType(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dtoFile_1", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
   // modifier* qualifiedName
   //     (':' qualifiedName (',' qualifiedName)*)?
   //     dtoBody
@@ -596,40 +630,6 @@ public class DtoParser implements PsiParser, LightPsiParser {
     if (!r) r = userProp(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
-  }
-
-  /* ********************************************************** */
-  // importStatement* dtoType*
-  static boolean file(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "file")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = file_0(b, l + 1);
-    r = r && file_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // importStatement*
-  private static boolean file_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "file_0")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!importStatement(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "file_0", c)) break;
-    }
-    return true;
-  }
-
-  // dtoType*
-  private static boolean file_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "file_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!dtoType(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "file_1", c)) break;
-    }
-    return true;
   }
 
   /* ********************************************************** */

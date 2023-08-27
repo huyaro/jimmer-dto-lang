@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Jimmer-Dto-Lang</name>
+    <name>Jimmer Dto Lang</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="huyaro.dev@outlook.com" url="https://github.com/huyaro">Jimmer-Dto-Lang</vendor>
@@ -14,23 +14,30 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-         <i>Jimmer Dto language</i> with support for
-         syntax highlighting, error prompt, code completion, and other features.
+         Basic support for customized DTO language for the Jimmer framework.
     ]]>
     </description>
 
     <change-notes>
         <![CDATA[
+     <h4>0.0.2</h4>
       <ul>
-        <li><b>0.0.1</b> Support syntax highlighting and error prompt.</li>
+        <li>Support structure view</li>
       </ul>
+      <h4>0.0.1</h4>
+        <ul>
+           <li>- Dto file icon</li>
+           <li>- Syntax specification</li>
+           <li>- Syntax error prompt</li>
+           <li>- Syntax highlighting</li>
+           <li>- Input and view different types of icons</li>
+        </ul>
     ]]>
     </change-notes>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.java</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->

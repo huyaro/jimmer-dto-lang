@@ -20,6 +20,11 @@ public class DtoStructureViewFactory implements PsiStructureViewFactory {
       public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
         return new DtoStructureViewModel(editor, psiFile);
       }
+
+      @Override
+      public boolean isRootNodeShown() {
+        return false;
+      }
     };
   }
 
