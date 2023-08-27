@@ -1,0 +1,57 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>dev.huyaro.lang</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Jimmer-Dto-Lang</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="huyaro.dev@outlook.com" url="https://github.com/huyaro">Jimmer-Dto-Lang</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+         <i>Jimmer Dto language</i> with support for
+         syntax highlighting, error prompt, code completion, and other features.
+    ]]>
+    </description>
+
+    <change-notes>
+        <![CDATA[
+      <ul>
+        <li><b>0.0.1</b> Support syntax highlighting and error prompt.</li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 注册dto文件类型-->
+        <fileType name="Dto File" implementationClass="dev.huyaro.lang.DtoFileType"
+                  fieldName="INSTANCE" language="dto" extensions="dto"/>
+        <lang.parserDefinition language="dto"
+                               implementationClass="dev.huyaro.lang.DtoParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="dto"
+                                       implementationClass="dev.huyaro.lang.DtoSyntaxHighlighterFactory"/>
+        <completion.contributor language="dto"
+                                implementationClass="dev.huyaro.lang.DtoCompletionContributor"/>
+        <lang.psiStructureViewFactory language="dto"
+                                      implementationClass="dev.huyaro.lang.DtoStructureViewFactory" />
+        <navbar implementation="dev.huyaro.lang.DtoStructureAwareNavbar"/>
+        <lang.commenter language="dto"
+                        implementationClass="dev.huyaro.lang.DtoCommenter"/>
+        <spellchecker.support language="dto"
+                              implementationClass="dev.huyaro.lang.DtoSpellcheckingStrategy"/>
+        <codeInsight.lineMarkerProvider language="dto"
+                                        implementationClass="dev.huyaro.lang.DtoLineMarkerProvider" />
+    </extensions>
+</idea-plugin>

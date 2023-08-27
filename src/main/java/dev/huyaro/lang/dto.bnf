@@ -1,0 +1,126 @@
+{
+  parserClass="dev.huyaro.lang.parser.DtoParser"
+  parserUtilClass="dev.huyaro.lang.parser.DtoParserUtil"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Dto"
+  psiImplClassSuffix="Impl"
+  psiPackage="dev.huyaro.lang.psi"
+  psiImplPackage="dev.huyaro.lang.psi.impl"
+  psiImplUtilClass="dev.huyaro.lang.psi.impl.DtoPsiImplUtil"
+
+  elementTypeHolderClass="dev.huyaro.lang.psi.DtoTypes"
+  elementTypeClass="dev.huyaro.lang.psi.DtoElementType"
+  tokenTypeClass="dev.huyaro.lang.psi.DtoTokenType"
+
+  tokens=[
+    LBRACE       =  "{"
+    RBRACE       =  "}"
+    LBRACK       =  "["
+    RBRACK       =  "]"
+    LPAREN       =  "("
+    RPAREN       =  ")"
+    LANGLE       =  "<"
+    RANGLE       =  ">"
+    COMMA        =  ","
+    SEMICOLON    =  ";"
+    DOT          =  "."
+    AT           = '@'
+    HASH         = '#'
+    EQUAL        = '='
+    OPTNULL      = '?'
+    CARET        = '^'
+    DOLOR        = '$'
+    COLON        = ':'
+    STAR         = '*'
+    MINUS        = '-'
+    RIGHT_ARROW  = '->'
+    ABSTRACT     = 'abstract'
+    INPUT        = 'input'
+    IMPORT       = 'import'
+    KEY_AS       = 'as'
+
+    Space='regexp:\s+'
+    Id='regexp:\w+'
+    String="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
+    Number='regexp:-?(0|[1-9][0-9]*)(\.[0-9]+)?([e|E][+-]?[0-9]+)?'
+    BlockComment="regexp:/\*(.|\n)*?\*/"
+    LineComment="regexp://.*\n"
+  ]
+}
+
+file ::= importStatement* dtoType*
+importStatement ::=
+    'import' Identifier ('.' Identifier)*
+    (
+    '.' '{' importedType (',' importedType)* '}'
+    | 'as' Identifier
+    )?
+importedType ::= Identifier ('as' Identifier)?
+
+dtoType ::=
+    modifier* qualifiedName
+    (':' qualifiedName (',' qualifiedName)*)?
+    dtoBody
+
+modifier ::= 'abstract' | 'input'
+dtoBody ::=  '{' (explicitProp (','|';')?)* '}'
+explicitProp ::=
+    allScalars
+    | aliasGroup
+    | positiveProp
+    | negativeProp
+    | userProp
+
+allScalars ::=
+    '#' Identifier
+    ('(' qualifiedName (',' qualifiedName)* ')')?
+    '?'?
+
+aliasGroup ::= aliasPattern '{' aliasGroupProp* '}'
+aliasPattern ::=
+    'as' '(' '^'? Identifier? '$'? '->' Identifier? ')'
+aliasGroupProp ::= allScalars | positiveProp
+
+positiveProp ::=
+    '+'?
+    (Identifier '(' Identifier ')' | Identifier)
+    '?'?
+    ('as' Identifier)?
+    dtoBody? '*'?
+
+negativeProp ::= '-' Identifier
+
+//TODO  如果不定义注解,没法单独定义变量, 暂时没找出来原因
+userProp ::=
+    annotation*
+    Identifier ':' typeRef
+typeRef ::=
+    qualifiedName
+    ('<' genericArgument (',' genericArgument)? '>')?
+    '?'?
+genericArgument ::= '*' | Identifier? // 原g4文件在此处的写法是 Identifier? TypeRef, 此处有差异
+
+qualifiedName ::= Identifier ('.' Identifier)*
+annotation ::= '@' qualifiedName ('(' annotationArguments? ')')?
+annotationArguments ::=
+    annotationValue (',' annotationNamedArgument)*
+    | annotationNamedArgument (',' annotationNamedArgument)*
+annotationNamedArgument ::= Identifier '=' annotationValue
+annotationValue ::=
+    annotationSingleValue
+    | annotationArrayValue
+annotationSingleValue ::=
+    BooleanLiteral
+    | Number
+    | String
+//    | qualifiedName  //TODO 放开后注解参数的=会有问题,不放开的话参数值不能为枚举
+    | annotation
+    | nestedAnnotation
+annotationArrayValue ::=
+      '[' annotationSingleValue (',' annotationSingleValue)* ']'
+    | '{' annotationSingleValue (',' annotationSingleValue)* '}'
+nestedAnnotation ::= qualifiedName '(' annotationArguments? ')'
+
+Identifier ::= Id
+BooleanLiteral ::= 'true' | 'false'
