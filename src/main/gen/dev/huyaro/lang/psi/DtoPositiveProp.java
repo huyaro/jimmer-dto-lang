@@ -10,6 +10,9 @@ public interface DtoPositiveProp extends PsiElement {
   @NotNull
   List<DtoIdentifier> getIdentifierList();
 
+  @NotNull
+  List<DtoAnnotation> getAnnotationList();
+
   @Nullable
   DtoDtoBody getDtoBody();
 

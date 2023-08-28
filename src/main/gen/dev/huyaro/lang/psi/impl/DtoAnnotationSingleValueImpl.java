@@ -47,6 +47,12 @@ public class DtoAnnotationSingleValueImpl extends ASTWrapperPsiElement implement
 
   @Override
   @Nullable
+  public DtoQualifiedName getQualifiedName() {
+    return findChildByClass(DtoQualifiedName.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getNumber() {
     return findChildByType(NUMBER);
   }
@@ -55,6 +61,12 @@ public class DtoAnnotationSingleValueImpl extends ASTWrapperPsiElement implement
   @Nullable
   public PsiElement getString() {
     return findChildByType(STRING);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteral() {
+    return findChildByType(STRINGLITERAL);
   }
 
 }

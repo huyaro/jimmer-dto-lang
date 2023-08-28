@@ -23,7 +23,7 @@ public class DtoStructureAwareNavbar extends StructureAwareNavBarModelExtension 
             return file.getName();
         }
         if (object instanceof DtoDtoType type) {
-            return type.getQualifiedNameList().get(0).getText();
+            return type.getIdentifierList().get(0).getText();
         }
         if (object instanceof DtoExplicitProp explicitProp) {
             return DtoUtil.findActualPropName(explicitProp);

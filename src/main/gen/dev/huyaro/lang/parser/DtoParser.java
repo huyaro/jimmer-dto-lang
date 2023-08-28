@@ -146,7 +146,7 @@ public class DtoParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // '#' Identifier
   //     ('(' qualifiedName (',' qualifiedName)* ')')?
-  //     '?'?
+  //     ('?'|'!')?
   public static boolean allScalars(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "allScalars")) return false;
     if (!nextTokenIs(b, HASH)) return false;
@@ -202,11 +202,20 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '?'?
+  // ('?'|'!')?
   private static boolean allScalars_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "allScalars_3")) return false;
-    consumeToken(b, OPTNULL);
+    allScalars_3_0(b, l + 1);
     return true;
+  }
+
+  // '?'|'!'
+  private static boolean allScalars_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "allScalars_3_0")) return false;
+    boolean r;
+    r = consumeToken(b, OPTNULL);
+    if (!r) r = consumeToken(b, "!");
+    return r;
   }
 
   /* ********************************************************** */
@@ -250,8 +259,8 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // annotationValue (',' annotationNamedArgument)*
-  //     | annotationNamedArgument (',' annotationNamedArgument)*
+  // annotationNamedArgument (',' annotationNamedArgument)*
+  //     | annotationValue (',' annotationNamedArgument)*
   public static boolean annotationArguments(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annotationArguments")) return false;
     boolean r;
@@ -262,12 +271,12 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // annotationValue (',' annotationNamedArgument)*
+  // annotationNamedArgument (',' annotationNamedArgument)*
   private static boolean annotationArguments_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annotationArguments_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = annotationValue(b, l + 1);
+    r = annotationNamedArgument(b, l + 1);
     r = r && annotationArguments_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
@@ -295,12 +304,12 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // annotationNamedArgument (',' annotationNamedArgument)*
+  // annotationValue (',' annotationNamedArgument)*
   private static boolean annotationArguments_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annotationArguments_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = annotationNamedArgument(b, l + 1);
+    r = annotationValue(b, l + 1);
     r = r && annotationArguments_1_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
@@ -465,7 +474,8 @@ public class DtoParser implements PsiParser, LightPsiParser {
   // BooleanLiteral
   //     | Number
   //     | String
-  // //    | qualifiedName  //TODO 放开后注解参数的=会有问题,不放开的话参数值不能为枚举
+  //     | StringLiteral
+  //     | qualifiedName
   //     | annotation
   //     | nestedAnnotation
   public static boolean annotationSingleValue(PsiBuilder b, int l) {
@@ -475,6 +485,8 @@ public class DtoParser implements PsiParser, LightPsiParser {
     r = BooleanLiteral(b, l + 1);
     if (!r) r = consumeToken(b, NUMBER);
     if (!r) r = consumeToken(b, STRING);
+    if (!r) r = consumeToken(b, STRINGLITERAL);
+    if (!r) r = qualifiedName(b, l + 1);
     if (!r) r = annotation(b, l + 1);
     if (!r) r = nestedAnnotation(b, l + 1);
     exit_section_(b, l, m, r, false, null);
@@ -581,69 +593,82 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // modifier* qualifiedName
-  //     (':' qualifiedName (',' qualifiedName)*)?
+  // annotation*
+  //     modifier* Identifier
+  //     (':' Identifier (',' Identifier)*)?
   //     dtoBody
   public static boolean dtoType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dtoType")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, DTO_TYPE, "<dto type>");
     r = dtoType_0(b, l + 1);
-    r = r && qualifiedName(b, l + 1);
-    r = r && dtoType_2(b, l + 1);
+    r = r && dtoType_1(b, l + 1);
+    r = r && Identifier(b, l + 1);
+    r = r && dtoType_3(b, l + 1);
     r = r && dtoBody(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // modifier*
+  // annotation*
   private static boolean dtoType_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dtoType_0")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!modifier(b, l + 1)) break;
+      if (!annotation(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "dtoType_0", c)) break;
     }
     return true;
   }
 
-  // (':' qualifiedName (',' qualifiedName)*)?
-  private static boolean dtoType_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_2")) return false;
-    dtoType_2_0(b, l + 1);
-    return true;
-  }
-
-  // ':' qualifiedName (',' qualifiedName)*
-  private static boolean dtoType_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COLON);
-    r = r && qualifiedName(b, l + 1);
-    r = r && dtoType_2_0_2(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // (',' qualifiedName)*
-  private static boolean dtoType_2_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_2_0_2")) return false;
+  // modifier*
+  private static boolean dtoType_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!dtoType_2_0_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "dtoType_2_0_2", c)) break;
+      if (!modifier(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dtoType_1", c)) break;
     }
     return true;
   }
 
-  // ',' qualifiedName
-  private static boolean dtoType_2_0_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_2_0_2_0")) return false;
+  // (':' Identifier (',' Identifier)*)?
+  private static boolean dtoType_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3")) return false;
+    dtoType_3_0(b, l + 1);
+    return true;
+  }
+
+  // ':' Identifier (',' Identifier)*
+  private static boolean dtoType_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COLON);
+    r = r && Identifier(b, l + 1);
+    r = r && dtoType_3_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (',' Identifier)*
+  private static boolean dtoType_3_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!dtoType_3_0_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dtoType_3_0_2", c)) break;
+    }
+    return true;
+  }
+
+  // ',' Identifier
+  private static boolean dtoType_3_0_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
-    r = r && qualifiedName(b, l + 1);
+    r = r && Identifier(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -651,26 +676,27 @@ public class DtoParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // allScalars
   //     | aliasGroup
-  //     | positiveProp
   //     | negativeProp
   //     | userProp
+  //     | positiveProp
   public static boolean explicitProp(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "explicitProp")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, EXPLICIT_PROP, "<explicit prop>");
     r = allScalars(b, l + 1);
     if (!r) r = aliasGroup(b, l + 1);
-    if (!r) r = positiveProp(b, l + 1);
     if (!r) r = negativeProp(b, l + 1);
     if (!r) r = userProp(b, l + 1);
+    if (!r) r = positiveProp(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // '*' | Identifier?
+  // '*' | (Identifier ',' Identifier | Identifier '?'?)
   public static boolean genericArgument(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "genericArgument")) return false;
+    if (!nextTokenIs(b, "<generic argument>", ID, STAR)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, GENERIC_ARGUMENT, "<generic argument>");
     r = consumeToken(b, STAR);
@@ -679,11 +705,57 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // Identifier?
+  // Identifier ',' Identifier | Identifier '?'?
   private static boolean genericArgument_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "genericArgument_1")) return false;
-    Identifier(b, l + 1);
+    boolean r;
+    Marker m = enter_section_(b);
+    r = genericArgument_1_0(b, l + 1);
+    if (!r) r = genericArgument_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // Identifier ',' Identifier
+  private static boolean genericArgument_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "genericArgument_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Identifier(b, l + 1);
+    r = r && consumeToken(b, COMMA);
+    r = r && Identifier(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // Identifier '?'?
+  private static boolean genericArgument_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "genericArgument_1_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Identifier(b, l + 1);
+    r = r && genericArgument_1_1_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // '?'?
+  private static boolean genericArgument_1_1_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "genericArgument_1_1_1")) return false;
+    consumeToken(b, OPTNULL);
     return true;
+  }
+
+  /* ********************************************************** */
+  // 'in' | 'out'
+  public static boolean genericModifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "genericModifier")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, GENERIC_MODIFIER, "<generic modifier>");
+    r = consumeToken(b, "in");
+    if (!r) r = consumeToken(b, "out");
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -827,14 +899,14 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // 'abstract' | 'input'
+  // 'abstract' | 'input' | 'input-only'
   public static boolean modifier(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "modifier")) return false;
-    if (!nextTokenIs(b, "<modifier>", ABSTRACT, INPUT)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, MODIFIER, "<modifier>");
     r = consumeToken(b, ABSTRACT);
     if (!r) r = consumeToken(b, INPUT);
+    if (!r) r = consumeToken(b, "input-only");
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -875,11 +947,12 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '+'?
+  // annotation*
+  //     '+'?
   //     (Identifier '(' Identifier ')' | Identifier)
-  //     '?'?
+  //     ('?'|'!')?
   //     ('as' Identifier)?
-  //     dtoBody? '*'?
+  //     (annotation* dtoBody '*'?)?
   public static boolean positiveProp(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "positiveProp")) return false;
     boolean r;
@@ -894,27 +967,38 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '+'?
+  // annotation*
   private static boolean positiveProp_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "positiveProp_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!annotation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "positiveProp_0", c)) break;
+    }
+    return true;
+  }
+
+  // '+'?
+  private static boolean positiveProp_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_1")) return false;
     consumeToken(b, "+");
     return true;
   }
 
   // Identifier '(' Identifier ')' | Identifier
-  private static boolean positiveProp_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "positiveProp_1")) return false;
+  private static boolean positiveProp_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = positiveProp_1_0(b, l + 1);
+    r = positiveProp_2_0(b, l + 1);
     if (!r) r = Identifier(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // Identifier '(' Identifier ')'
-  private static boolean positiveProp_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "positiveProp_1_0")) return false;
+  private static boolean positiveProp_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = Identifier(b, l + 1);
@@ -925,23 +1009,32 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // '?'?
-  private static boolean positiveProp_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "positiveProp_2")) return false;
-    consumeToken(b, OPTNULL);
-    return true;
-  }
-
-  // ('as' Identifier)?
+  // ('?'|'!')?
   private static boolean positiveProp_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "positiveProp_3")) return false;
     positiveProp_3_0(b, l + 1);
     return true;
   }
 
-  // 'as' Identifier
+  // '?'|'!'
   private static boolean positiveProp_3_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "positiveProp_3_0")) return false;
+    boolean r;
+    r = consumeToken(b, OPTNULL);
+    if (!r) r = consumeToken(b, "!");
+    return r;
+  }
+
+  // ('as' Identifier)?
+  private static boolean positiveProp_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_4")) return false;
+    positiveProp_4_0(b, l + 1);
+    return true;
+  }
+
+  // 'as' Identifier
+  private static boolean positiveProp_4_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, KEY_AS);
@@ -950,16 +1043,39 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // dtoBody?
-  private static boolean positiveProp_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "positiveProp_4")) return false;
-    dtoBody(b, l + 1);
+  // (annotation* dtoBody '*'?)?
+  private static boolean positiveProp_5(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_5")) return false;
+    positiveProp_5_0(b, l + 1);
+    return true;
+  }
+
+  // annotation* dtoBody '*'?
+  private static boolean positiveProp_5_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_5_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = positiveProp_5_0_0(b, l + 1);
+    r = r && dtoBody(b, l + 1);
+    r = r && positiveProp_5_0_2(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // annotation*
+  private static boolean positiveProp_5_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_5_0_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!annotation(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "positiveProp_5_0_0", c)) break;
+    }
     return true;
   }
 
   // '*'?
-  private static boolean positiveProp_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "positiveProp_5")) return false;
+  private static boolean positiveProp_5_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "positiveProp_5_0_2")) return false;
     consumeToken(b, STAR);
     return true;
   }
@@ -1001,7 +1117,7 @@ public class DtoParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // qualifiedName
-  //     ('<' genericArgument (',' genericArgument)? '>')?
+  //     ('<' genericModifier? genericArgument '>')?
   //     '?'?
   public static boolean typeRef(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeRef")) return false;
@@ -1015,42 +1131,31 @@ public class DtoParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ('<' genericArgument (',' genericArgument)? '>')?
+  // ('<' genericModifier? genericArgument '>')?
   private static boolean typeRef_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeRef_1")) return false;
     typeRef_1_0(b, l + 1);
     return true;
   }
 
-  // '<' genericArgument (',' genericArgument)? '>'
+  // '<' genericModifier? genericArgument '>'
   private static boolean typeRef_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeRef_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, LANGLE);
+    r = r && typeRef_1_0_1(b, l + 1);
     r = r && genericArgument(b, l + 1);
-    r = r && typeRef_1_0_2(b, l + 1);
     r = r && consumeToken(b, RANGLE);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // (',' genericArgument)?
-  private static boolean typeRef_1_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeRef_1_0_2")) return false;
-    typeRef_1_0_2_0(b, l + 1);
+  // genericModifier?
+  private static boolean typeRef_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeRef_1_0_1")) return false;
+    genericModifier(b, l + 1);
     return true;
-  }
-
-  // ',' genericArgument
-  private static boolean typeRef_1_0_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeRef_1_0_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, COMMA);
-    r = r && genericArgument(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   // '?'?

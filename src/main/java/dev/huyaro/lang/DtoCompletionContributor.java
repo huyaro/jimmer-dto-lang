@@ -11,7 +11,12 @@ import java.util.Set;
 
 public class DtoCompletionContributor extends CompletionContributor {
 
-    private final Set<String> keywords = Set.of("allScalars", "abstract", "input");
+    private final Set<String> keywords = Set.of(
+            "allScalars", "abstract", "input", "input-only",
+            "Boolean", "Character", "Byte", "Short", "Int", "Long", "Float", "Double", "Any", "String",
+            "Array", "Iterable", "MutableIterable", "Collection", "MutableCollection",
+            "List", "MutableList", "Set", "MutableSet", "Map", "MutableMap"
+    );
 
     public DtoCompletionContributor() {
         extend(CompletionType.BASIC, PlatformPatterns.psiElement(DtoTypes.ID),

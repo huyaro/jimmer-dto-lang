@@ -75,6 +75,10 @@ public class DtoVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitGenericModifier(@NotNull DtoGenericModifier o) {
+    visitPsiElement(o);
+  }
+
   public void visitImportStatement(@NotNull DtoImportStatement o) {
     visitPsiElement(o);
   }

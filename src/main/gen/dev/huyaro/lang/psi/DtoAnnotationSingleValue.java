@@ -17,9 +17,15 @@ public interface DtoAnnotationSingleValue extends PsiElement {
   DtoNestedAnnotation getNestedAnnotation();
 
   @Nullable
+  DtoQualifiedName getQualifiedName();
+
+  @Nullable
   PsiElement getNumber();
 
   @Nullable
   PsiElement getString();
+
+  @Nullable
+  PsiElement getStringLiteral();
 
 }

@@ -28,9 +28,9 @@ public class DtoGenericArgumentImpl extends ASTWrapperPsiElement implements DtoG
   }
 
   @Override
-  @Nullable
-  public DtoIdentifier getIdentifier() {
-    return findChildByClass(DtoIdentifier.class);
+  @NotNull
+  public List<DtoIdentifier> getIdentifierList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoIdentifier.class);
   }
 
 }

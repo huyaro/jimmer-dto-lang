@@ -29,6 +29,18 @@ public class DtoDtoTypeImpl extends ASTWrapperPsiElement implements DtoDtoType {
 
   @Override
   @NotNull
+  public List<DtoIdentifier> getIdentifierList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoIdentifier.class);
+  }
+
+  @Override
+  @NotNull
+  public List<DtoAnnotation> getAnnotationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoAnnotation.class);
+  }
+
+  @Override
+  @NotNull
   public DtoDtoBody getDtoBody() {
     return findNotNullChildByClass(DtoDtoBody.class);
   }
@@ -37,12 +49,6 @@ public class DtoDtoTypeImpl extends ASTWrapperPsiElement implements DtoDtoType {
   @NotNull
   public List<DtoModifier> getModifierList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoModifier.class);
-  }
-
-  @Override
-  @NotNull
-  public List<DtoQualifiedName> getQualifiedNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoQualifiedName.class);
   }
 
 }

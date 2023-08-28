@@ -24,6 +24,7 @@ public interface DtoTypes {
   IElementType DTO_TYPE = new DtoElementType("DTO_TYPE");
   IElementType EXPLICIT_PROP = new DtoElementType("EXPLICIT_PROP");
   IElementType GENERIC_ARGUMENT = new DtoElementType("GENERIC_ARGUMENT");
+  IElementType GENERIC_MODIFIER = new DtoElementType("GENERIC_MODIFIER");
   IElementType IDENTIFIER = new DtoElementType("IDENTIFIER");
   IElementType IMPORTED_TYPE = new DtoElementType("IMPORTED_TYPE");
   IElementType IMPORT_STATEMENT = new DtoElementType("IMPORT_STATEMENT");
@@ -65,6 +66,7 @@ public interface DtoTypes {
   IElementType SEMICOLON = new DtoTokenType(";");
   IElementType STAR = new DtoTokenType("*");
   IElementType STRING = new DtoTokenType("String");
+  IElementType STRINGLITERAL = new DtoTokenType("StringLiteral");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -116,6 +118,9 @@ public interface DtoTypes {
       }
       else if (type == GENERIC_ARGUMENT) {
         return new DtoGenericArgumentImpl(node);
+      }
+      else if (type == GENERIC_MODIFIER) {
+        return new DtoGenericModifierImpl(node);
       }
       else if (type == IDENTIFIER) {
         return new DtoIdentifierImpl(node);

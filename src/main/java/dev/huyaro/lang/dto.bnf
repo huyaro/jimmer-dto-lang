@@ -42,7 +42,10 @@
 
     Space='regexp:\s+'
     Id='regexp:\w+'
-    String="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\\'|\\)*\")"
+    // 中英文带全角符号
+    String="regexp:(\"([\u4e00-\u9fa5\uff00-\uffff|a-zA-Z0-9_.])*\")|('[a-zA-Z0-9_.]*')"
+    // 字符串正则表达式
+    StringLiteral='regexp:"[^"]*"'
     Number='regexp:-?(0|[1-9][0-9]*)(\.[0-9]+)?([e|E][+-]?[0-9]+)?'
     BlockComment="regexp:/\*(.|\n)*?\*/"
     LineComment="regexp://.*\n"
@@ -59,23 +62,24 @@ importStatement ::=
 importedType ::= Identifier ('as' Identifier)?
 
 dtoType ::=
-    modifier* qualifiedName
-    (':' qualifiedName (',' qualifiedName)*)?
+    annotation*
+    modifier* Identifier
+    (':' Identifier (',' Identifier)*)?
     dtoBody
 
-modifier ::= 'abstract' | 'input'
+modifier ::= 'abstract' | 'input' | 'input-only'
 dtoBody ::=  '{' (explicitProp (','|';')?)* '}'
 explicitProp ::=
     allScalars
     | aliasGroup
-    | positiveProp
     | negativeProp
     | userProp
+    | positiveProp
 
 allScalars ::=
     '#' Identifier
     ('(' qualifiedName (',' qualifiedName)* ')')?
-    '?'?
+    ('?'|'!')?
 
 aliasGroup ::= aliasPattern '{' aliasGroupProp* '}'
 aliasPattern ::=
@@ -83,30 +87,31 @@ aliasPattern ::=
 aliasGroupProp ::= allScalars | positiveProp
 
 positiveProp ::=
+    annotation*
     '+'?
     (Identifier '(' Identifier ')' | Identifier)
-    '?'?
+    ('?'|'!')?
     ('as' Identifier)?
-    dtoBody? '*'?
+    (annotation* dtoBody '*'?)?
 
 negativeProp ::= '-' Identifier
 
-//TODO  如果不定义注解,没法单独定义变量, 暂时没找出来原因
 userProp ::=
     annotation*
     Identifier ':' typeRef
 typeRef ::=
     qualifiedName
-    ('<' genericArgument (',' genericArgument)? '>')?
+    ('<' genericModifier? genericArgument '>')?
     '?'?
-genericArgument ::= '*' | Identifier? // 原g4文件在此处的写法是 Identifier? TypeRef, 此处有差异
+genericModifier ::= 'in' | 'out'
+genericArgument ::= '*' | (Identifier ',' Identifier | Identifier '?'?)
 
 qualifiedName ::= Identifier ('.' Identifier)*
 annotationName ::= Identifier ('.' Identifier)*
 annotation ::= '@' annotationName ('(' annotationArguments? ')')?
 annotationArguments ::=
-    annotationValue (',' annotationNamedArgument)*
-    | annotationNamedArgument (',' annotationNamedArgument)*
+    annotationNamedArgument (',' annotationNamedArgument)*
+    | annotationValue (',' annotationNamedArgument)*
 annotationNamedArgument ::= Identifier '=' annotationValue
 annotationValue ::=
     annotationSingleValue
@@ -115,7 +120,8 @@ annotationSingleValue ::=
     BooleanLiteral
     | Number
     | String
-//    | qualifiedName  //TODO 放开后注解参数的=会有问题,不放开的话参数值不能为枚举
+    | StringLiteral
+    | qualifiedName
     | annotation
     | nestedAnnotation
 annotationArrayValue ::=

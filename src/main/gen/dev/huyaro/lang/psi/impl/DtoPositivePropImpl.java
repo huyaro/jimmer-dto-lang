@@ -34,6 +34,12 @@ public class DtoPositivePropImpl extends ASTWrapperPsiElement implements DtoPosi
   }
 
   @Override
+  @NotNull
+  public List<DtoAnnotation> getAnnotationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoAnnotation.class);
+  }
+
+  @Override
   @Nullable
   public DtoDtoBody getDtoBody() {
     return findChildByClass(DtoDtoBody.class);

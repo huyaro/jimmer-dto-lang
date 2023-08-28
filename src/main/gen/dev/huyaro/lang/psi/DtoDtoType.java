@@ -8,12 +8,15 @@ import com.intellij.psi.PsiElement;
 public interface DtoDtoType extends PsiElement {
 
   @NotNull
+  List<DtoIdentifier> getIdentifierList();
+
+  @NotNull
+  List<DtoAnnotation> getAnnotationList();
+
+  @NotNull
   DtoDtoBody getDtoBody();
 
   @NotNull
   List<DtoModifier> getModifierList();
-
-  @NotNull
-  List<DtoQualifiedName> getQualifiedNameList();
 
 }

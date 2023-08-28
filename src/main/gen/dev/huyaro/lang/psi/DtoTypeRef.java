@@ -7,8 +7,11 @@ import com.intellij.psi.PsiElement;
 
 public interface DtoTypeRef extends PsiElement {
 
-  @NotNull
-  List<DtoGenericArgument> getGenericArgumentList();
+  @Nullable
+  DtoGenericArgument getGenericArgument();
+
+  @Nullable
+  DtoGenericModifier getGenericModifier();
 
   @NotNull
   DtoQualifiedName getQualifiedName();

@@ -55,7 +55,7 @@ public class DtoStructureViewElement implements StructureViewTreeElement, Sortab
             @Override
             public @NlsSafe @Nullable String getPresentableText() {
                 if (myElement instanceof DtoDtoType type) {
-                    return type.getQualifiedNameList().get(0).getText();
+                    return type.getIdentifierList().get(0).getText();
                 } else if (myElement instanceof DtoExplicitProp prop) {
                     return DtoUtil.findActualPropName(prop);
                 }

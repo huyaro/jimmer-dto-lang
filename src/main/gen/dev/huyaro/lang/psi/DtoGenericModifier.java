@@ -5,9 +5,6 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface DtoGenericArgument extends PsiElement {
-
-  @NotNull
-  List<DtoIdentifier> getIdentifierList();
+public interface DtoGenericModifier extends PsiElement {
 
 }
