@@ -17,6 +17,7 @@ public interface DtoSyntaxHighlighterColors {
     TextAttributesKey PARENTHESES = createTextAttributesKey("DTO_PARENTHESES", DefaultLanguageHighlighterColors.PARENTHESES);
     TextAttributesKey OPERATOR = createTextAttributesKey("DTO_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
     TextAttributesKey IDENTIFIER = createTextAttributesKey("DTO_IDENTIFIER", DefaultLanguageHighlighterColors.IDENTIFIER);
+    TextAttributesKey METADATA = createTextAttributesKey("DTO_METADATA", DefaultLanguageHighlighterColors.METADATA);
     TextAttributesKey DOT = createTextAttributesKey("DTO_DOT", DefaultLanguageHighlighterColors.DOT);
     TextAttributesKey SEMICOLON = createTextAttributesKey("DTO_SEMICOLON", DefaultLanguageHighlighterColors.SEMICOLON);
     TextAttributesKey COLON = createTextAttributesKey("DTO_COLON", HighlighterColors.TEXT);

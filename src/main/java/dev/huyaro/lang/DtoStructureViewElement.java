@@ -1,5 +1,6 @@
 package dev.huyaro.lang;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
@@ -56,18 +57,7 @@ public class DtoStructureViewElement implements StructureViewTreeElement, Sortab
                 if (myElement instanceof DtoDtoType type) {
                     return type.getQualifiedNameList().get(0).getText();
                 } else if (myElement instanceof DtoExplicitProp prop) {
-                    PsiElement actualProp = prop.getFirstChild();
-                    if (actualProp instanceof DtoAllScalars propAllScalars) {
-                        return "#" + propAllScalars.getIdentifier().getId().getText();
-                    } else if (actualProp instanceof DtoAliasGroup propAliasGroup) {
-                        return propAliasGroup.getAliasPattern().getText();
-                    } else if (actualProp instanceof DtoNegativeProp propNegative) {
-                        return propNegative.getText();
-                    } else if (actualProp instanceof DtoPositiveProp propPositive) {
-                        return propPositive.getIdentifierList().get(0).getText();
-                    } else if (actualProp instanceof DtoUserProp propUser) {
-                        return "@" + propUser.getIdentifier().getId().getText();
-                    }
+                    return DtoUtil.findActualPropName(prop);
                 }
                 return "";
             }
@@ -77,7 +67,10 @@ public class DtoStructureViewElement implements StructureViewTreeElement, Sortab
                 if (myElement instanceof DtoDtoType type) {
                     return type.getModifierList().isEmpty() ? DtoIcons.VIEW_TYPE : DtoIcons.INPUT_TYPE;
                 }
-                return PlatformIcons.FIELD_ICON;
+                if (myElement instanceof DtoExplicitProp) {
+                    return AllIcons.Nodes.Property;
+                }
+                return null;
             }
         };
     }

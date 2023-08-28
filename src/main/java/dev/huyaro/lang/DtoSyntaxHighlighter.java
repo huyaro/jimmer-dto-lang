@@ -6,6 +6,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import dev.huyaro.lang.psi.DtoTypes;
+import kotlinx.html.META;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -31,8 +32,9 @@ public class DtoSyntaxHighlighter extends SyntaxHighlighterBase {
 
         fillMap(ATTRIBUTES, KEYWORD, DtoTypes.KEY_AS, DtoTypes.IMPORT, DtoTypes.ABSTRACT, DtoTypes.INPUT);
         fillMap(ATTRIBUTES, TYPE_REFERENCE, DtoTypes.RIGHT_ARROW, DtoTypes.OPTNULL, DtoTypes.STAR);
-        fillMap(ATTRIBUTES, BUILTIN_FUNCTION, DtoTypes.MINUS, DtoTypes.HASH, DtoTypes.AT, DtoTypes.CARET, DtoTypes.DOLOR);
+        fillMap(ATTRIBUTES, BUILTIN_FUNCTION, DtoTypes.MINUS, DtoTypes.HASH, DtoTypes.CARET, DtoTypes.DOLOR);
 
+        fillMap(ATTRIBUTES, METADATA, DtoTypes.AT);
         fillMap(ATTRIBUTES, STRING, DtoTypes.STRING);
         fillMap(ATTRIBUTES, NUMBER, DtoTypes.NUMBER);
     }

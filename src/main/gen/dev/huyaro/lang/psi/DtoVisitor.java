@@ -43,6 +43,10 @@ public class DtoVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitAnnotationName(@NotNull DtoAnnotationName o) {
+    visitPsiElement(o);
+  }
+
   public void visitAnnotationNamedArgument(@NotNull DtoAnnotationNamedArgument o) {
     visitPsiElement(o);
   }

@@ -210,14 +210,14 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '@' qualifiedName ('(' annotationArguments? ')')?
+  // '@' annotationName ('(' annotationArguments? ')')?
   public static boolean annotation(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "annotation")) return false;
     if (!nextTokenIs(b, AT)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, AT);
-    r = r && qualifiedName(b, l + 1);
+    r = r && annotationName(b, l + 1);
     r = r && annotation_2(b, l + 1);
     exit_section_(b, m, ANNOTATION, r);
     return r;
@@ -408,6 +408,41 @@ public class DtoParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
     r = r && annotationSingleValue(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // Identifier ('.' Identifier)*
+  public static boolean annotationName(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annotationName")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Identifier(b, l + 1);
+    r = r && annotationName_1(b, l + 1);
+    exit_section_(b, m, ANNOTATION_NAME, r);
+    return r;
+  }
+
+  // ('.' Identifier)*
+  private static boolean annotationName_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annotationName_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!annotationName_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "annotationName_1", c)) break;
+    }
+    return true;
+  }
+
+  // '.' Identifier
+  private static boolean annotationName_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "annotationName_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, DOT);
+    r = r && Identifier(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }

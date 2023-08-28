@@ -15,6 +15,7 @@ public interface DtoTypes {
   IElementType ANNOTATION = new DtoElementType("ANNOTATION");
   IElementType ANNOTATION_ARGUMENTS = new DtoElementType("ANNOTATION_ARGUMENTS");
   IElementType ANNOTATION_ARRAY_VALUE = new DtoElementType("ANNOTATION_ARRAY_VALUE");
+  IElementType ANNOTATION_NAME = new DtoElementType("ANNOTATION_NAME");
   IElementType ANNOTATION_NAMED_ARGUMENT = new DtoElementType("ANNOTATION_NAMED_ARGUMENT");
   IElementType ANNOTATION_SINGLE_VALUE = new DtoElementType("ANNOTATION_SINGLE_VALUE");
   IElementType ANNOTATION_VALUE = new DtoElementType("ANNOTATION_VALUE");
@@ -88,6 +89,9 @@ public interface DtoTypes {
       }
       else if (type == ANNOTATION_ARRAY_VALUE) {
         return new DtoAnnotationArrayValueImpl(node);
+      }
+      else if (type == ANNOTATION_NAME) {
+        return new DtoAnnotationNameImpl(node);
       }
       else if (type == ANNOTATION_NAMED_ARGUMENT) {
         return new DtoAnnotationNamedArgumentImpl(node);

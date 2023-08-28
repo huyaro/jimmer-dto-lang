@@ -13,71 +13,28 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
-import dev.huyaro.lang.psi.DtoFile;
-import dev.huyaro.lang.psi.DtoExplicitProp;
+import dev.huyaro.lang.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class DtoUtil {
 
-  /**
-   * Searches the entire project for Dto language files with instances of the Dto property with the given key.
-   *
-   * @param project current project
-   * @param key     to check
-   * @return matching properties
-   */
-  public static List<DtoExplicitProp> findProperties(Project project, String key) {
-    List<DtoExplicitProp> result = new ArrayList<>();
-    Collection<VirtualFile> virtualFiles =
-            FileTypeIndex.getFiles(DtoFileType.INSTANCE, GlobalSearchScope.allScope(project));
-    for (VirtualFile virtualFile : virtualFiles) {
-      DtoFile dtoFile = (DtoFile) PsiManager.getInstance(project).findFile(virtualFile);
-      if (dtoFile != null) {
-        DtoExplicitProp[] properties = PsiTreeUtil.getChildrenOfType(dtoFile, DtoExplicitProp.class);
-        if (properties != null) {
-          for (DtoExplicitProp property : properties) {
-            if (key.equals(property.getText())) { //TODO 思考key与property之间的关系, 需要重写
-              result.add(property);
-            }
-          }
+    public static String findActualPropName(DtoExplicitProp explicitProp) {
+        PsiElement actualProp = explicitProp.getFirstChild();
+        if (actualProp instanceof DtoAllScalars propAllScalars) {
+            return "#" + propAllScalars.getIdentifier().getId().getText();
+        } else if (actualProp instanceof DtoAliasGroup propAliasGroup) {
+            return propAliasGroup.getAliasPattern().getText();
+        } else if (actualProp instanceof DtoNegativeProp propNegative) {
+            return propNegative.getText();
+        } else if (actualProp instanceof DtoPositiveProp propPositive) {
+            return propPositive.getIdentifierList().get(0).getText();
+        } else if (actualProp instanceof DtoUserProp propUser) {
+            return "@" + propUser.getIdentifier().getId().getText();
+        } else {
+            return "";
         }
-      }
     }
-    return result;
-  }
-
-  public static List<DtoExplicitProp> findProperties(Project project) {
-    List<DtoExplicitProp> result = new ArrayList<>();
-    Collection<VirtualFile> virtualFiles =
-            FileTypeIndex.getFiles(DtoFileType.INSTANCE, GlobalSearchScope.allScope(project));
-    for (VirtualFile virtualFile : virtualFiles) {
-      DtoFile dtoFile = (DtoFile) PsiManager.getInstance(project).findFile(virtualFile);
-      if (dtoFile != null) {
-        DtoExplicitProp[] properties = PsiTreeUtil.getChildrenOfType(dtoFile, DtoExplicitProp.class);
-        if (properties != null) {
-          Collections.addAll(result, properties);
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
-   * Attempts to collect any comment elements above the Dto key/value pair.
-   */
-  public static @NotNull String findDocumentationComment(DtoExplicitProp property) {
-    List<String> result = new LinkedList<>();
-    PsiElement element = property.getPrevSibling();
-    while (element instanceof PsiComment || element instanceof PsiWhiteSpace) {
-      if (element instanceof PsiComment) {
-        String commentText = element.getText().replaceFirst("[/* ]+", "");
-        result.add(commentText);
-      }
-      element = element.getPrevSibling();
-    }
-    return StringUtil.join(Lists.reverse(result),"\n ");
-  }
 
 }

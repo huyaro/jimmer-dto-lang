@@ -49,6 +49,7 @@
                                implementationClass="dev.huyaro.lang.DtoParserDefinition"/>
         <lang.syntaxHighlighterFactory language="dto"
                                        implementationClass="dev.huyaro.lang.DtoSyntaxHighlighterFactory"/>
+        <annotator language="dto" implementationClass="dev.huyaro.lang.DtoSyntaxAnnotator"/>
         <completion.contributor language="dto"
                                 implementationClass="dev.huyaro.lang.DtoCompletionContributor"/>
         <lang.psiStructureViewFactory language="dto"

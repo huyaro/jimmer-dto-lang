@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface DtoAnnotation extends PsiElement {
-
-  @Nullable
-  DtoAnnotationArguments getAnnotationArguments();
+public interface DtoAnnotationName extends PsiElement {
 
   @NotNull
-  DtoAnnotationName getAnnotationName();
+  List<DtoIdentifier> getIdentifierList();
 
 }

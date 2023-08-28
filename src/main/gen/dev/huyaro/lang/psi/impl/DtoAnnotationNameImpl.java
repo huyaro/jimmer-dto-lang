@@ -11,14 +11,14 @@ import static dev.huyaro.lang.psi.DtoTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import dev.huyaro.lang.psi.*;
 
-public class DtoAnnotationImpl extends ASTWrapperPsiElement implements DtoAnnotation {
+public class DtoAnnotationNameImpl extends ASTWrapperPsiElement implements DtoAnnotationName {
 
-  public DtoAnnotationImpl(@NotNull ASTNode node) {
+  public DtoAnnotationNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull DtoVisitor visitor) {
-    visitor.visitAnnotation(this);
+    visitor.visitAnnotationName(this);
   }
 
   @Override
@@ -28,15 +28,9 @@ public class DtoAnnotationImpl extends ASTWrapperPsiElement implements DtoAnnota
   }
 
   @Override
-  @Nullable
-  public DtoAnnotationArguments getAnnotationArguments() {
-    return findChildByClass(DtoAnnotationArguments.class);
-  }
-
-  @Override
   @NotNull
-  public DtoAnnotationName getAnnotationName() {
-    return findNotNullChildByClass(DtoAnnotationName.class);
+  public List<DtoIdentifier> getIdentifierList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, DtoIdentifier.class);
   }
 
 }
