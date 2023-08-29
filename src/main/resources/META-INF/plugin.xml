@@ -14,12 +14,18 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-         Basic support for customized DTO language for the Jimmer framework.
+         Jimmer DTO language support<br/>
+         <a href="https://github.com/huyaro/jimmer-dto-lang">Github</a>
+         <a href="https://babyfish-ct.gitee.io/jimmer-doc/docs/object/view/dto-language">Document</a>
     ]]>
     </description>
 
     <change-notes>
         <![CDATA[
+      <h4>0.0.3</h4>
+      <ul>
+        <li>Adjust DTO syntax specification to match jimmer latest specification</li>
+      </ul>
      <h4>0.0.2</h4>
       <ul>
         <li>Support structure view</li>
