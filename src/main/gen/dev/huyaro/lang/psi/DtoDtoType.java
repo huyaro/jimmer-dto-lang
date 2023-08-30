@@ -13,7 +13,7 @@ public interface DtoDtoType extends PsiElement {
   @NotNull
   List<DtoAnnotation> getAnnotationList();
 
-  @NotNull
+  @Nullable
   DtoDtoBody getDtoBody();
 
   @NotNull

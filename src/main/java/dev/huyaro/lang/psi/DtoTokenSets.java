@@ -8,6 +8,6 @@ public interface DtoTokenSets {
 
     TokenSet IDENTIFIERS = TokenSet.create(DtoTypes.ID);
 
-    TokenSet COMMENTS = TokenSet.create(DtoTypes.BLOCKCOMMENT, DtoTypes.LINECOMMENT);
+    TokenSet COMMENTS = TokenSet.create(DtoTypes.COMMENT);
 
 }

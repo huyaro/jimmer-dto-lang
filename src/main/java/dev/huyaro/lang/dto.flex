@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.parser;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -27,11 +27,9 @@ WHITE_SPACE=\s+
 
 SPACE=[ \t\n\x0B\f\r]+
 ID=[a-zA-Z_0-9]+
-STRING=(\"([\u4e00-\u9fa5\uff00-\uffff|a-zA-Z0-9_.])*\")|('[a-zA-Z0-9_.]*')
-STRINGLITERAL=\"[^\"]*\"
+STRINGLITERAL=(\"([\u4e00-\u9fa5\uff00-\uffff]|[^\"])*\")|('[a-zA-Z0-9_.]*')
 NUMBER=-?(0|[1-9][0-9]*)(\.[0-9]+)?([e|E][+-]?[0-9]+)?
-BLOCKCOMMENT="/"\*(.|\n)*?\*"/"
-LINECOMMENT="//".*\n
+COMMENT="/"\*(.|\n)*?\*"/"|"//".*\n
 
 %%
 <YYINITIAL> {
@@ -65,11 +63,9 @@ LINECOMMENT="//".*\n
 
   {SPACE}               { return SPACE; }
   {ID}                  { return ID; }
-  {STRING}              { return STRING; }
   {STRINGLITERAL}       { return STRINGLITERAL; }
   {NUMBER}              { return NUMBER; }
-  {BLOCKCOMMENT}        { return BLOCKCOMMENT; }
-  {LINECOMMENT}         { return LINECOMMENT; }
+  {COMMENT}             { return COMMENT; }
 
 }
 

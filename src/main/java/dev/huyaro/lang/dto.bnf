@@ -43,12 +43,9 @@
     Space='regexp:\s+'
     Id='regexp:\w+'
     // 中英文带全角符号
-    String="regexp:(\"([\u4e00-\u9fa5\uff00-\uffff|a-zA-Z0-9_.])*\")|('[a-zA-Z0-9_.]*')"
-    // 字符串正则表达式
-    StringLiteral='regexp:"[^"]*"'
+    StringLiteral="regexp:(\"([\u4e00-\u9fa5\uff00-\uffff]|[^\"])*\")|('[a-zA-Z0-9_.]*')"
     Number='regexp:-?(0|[1-9][0-9]*)(\.[0-9]+)?([e|E][+-]?[0-9]+)?'
-    BlockComment="regexp:/\*(.|\n)*?\*/"
-    LineComment="regexp://.*\n"
+    Comment="regexp:/\*(.|\n)*?\*/|//.*\n"
   ]
 }
 
@@ -119,15 +116,15 @@ annotationValue ::=
 annotationSingleValue ::=
     BooleanLiteral
     | Number
-    | String
     | StringLiteral
-    | qualifiedName
     | annotation
     | nestedAnnotation
+    | qualifiedName
+
 annotationArrayValue ::=
       '[' annotationSingleValue (',' annotationSingleValue)* ']'
     | '{' annotationSingleValue (',' annotationSingleValue)* '}'
-nestedAnnotation ::= qualifiedName '(' annotationArguments? ')'
+nestedAnnotation ::= annotationName '(' annotationArguments? ')'
 
 Identifier ::= Id
 BooleanLiteral ::= 'true' | 'false'

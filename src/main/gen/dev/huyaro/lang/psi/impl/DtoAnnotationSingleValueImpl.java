@@ -59,12 +59,6 @@ public class DtoAnnotationSingleValueImpl extends ASTWrapperPsiElement implement
 
   @Override
   @Nullable
-  public PsiElement getString() {
-    return findChildByType(STRING);
-  }
-
-  @Override
-  @Nullable
   public PsiElement getStringLiteral() {
     return findChildByType(STRINGLITERAL);
   }

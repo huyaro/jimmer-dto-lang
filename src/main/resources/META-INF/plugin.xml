@@ -22,6 +22,10 @@
 
     <change-notes>
         <![CDATA[
+      <h4>0.0.4</h4>
+      <ul>
+        <li>Support DTO type to jump to class file</li>
+      </ul>
       <h4>0.0.3</h4>
       <ul>
         <li>Adjust DTO syntax specification to match jimmer latest specification</li>

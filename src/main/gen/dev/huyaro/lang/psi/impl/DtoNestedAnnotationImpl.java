@@ -35,8 +35,8 @@ public class DtoNestedAnnotationImpl extends ASTWrapperPsiElement implements Dto
 
   @Override
   @NotNull
-  public DtoQualifiedName getQualifiedName() {
-    return findNotNullChildByClass(DtoQualifiedName.class);
+  public DtoAnnotationName getAnnotationName() {
+    return findNotNullChildByClass(DtoAnnotationName.class);
   }
 
 }

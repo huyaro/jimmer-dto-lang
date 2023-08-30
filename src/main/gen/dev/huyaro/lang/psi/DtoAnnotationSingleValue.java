@@ -23,9 +23,6 @@ public interface DtoAnnotationSingleValue extends PsiElement {
   PsiElement getNumber();
 
   @Nullable
-  PsiElement getString();
-
-  @Nullable
   PsiElement getStringLiteral();
 
 }

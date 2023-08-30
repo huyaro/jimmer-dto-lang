@@ -26,7 +26,7 @@ public class DtoPsiImplUtil {
   }
 
   public static String getValue(DtoExplicitProp element) {
-    ASTNode valueNode = element.getNode().findChildByType(DtoTypes.STRING);
+    ASTNode valueNode = element.getNode().findChildByType(DtoTypes.STRINGLITERAL);
     if (valueNode != null) {
       return valueNode.getText();
     } else {

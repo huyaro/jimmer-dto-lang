@@ -38,12 +38,13 @@ public interface DtoTypes {
 
   IElementType ABSTRACT = new DtoTokenType("abstract");
   IElementType AT = new DtoTokenType("@");
-  IElementType BLOCKCOMMENT = new DtoTokenType("BlockComment");
   IElementType CARET = new DtoTokenType("^");
   IElementType COLON = new DtoTokenType(":");
   IElementType COMMA = new DtoTokenType(",");
+  IElementType COMMENT = new DtoTokenType("Comment");
   IElementType DOLOR = new DtoTokenType("$");
   IElementType DOT = new DtoTokenType(".");
+  IElementType EOL = new DtoTokenType("EOL");
   IElementType EQUAL = new DtoTokenType("=");
   IElementType HASH = new DtoTokenType("#");
   IElementType ID = new DtoTokenType("Id");
@@ -53,7 +54,6 @@ public interface DtoTypes {
   IElementType LANGLE = new DtoTokenType("<");
   IElementType LBRACE = new DtoTokenType("{");
   IElementType LBRACK = new DtoTokenType("[");
-  IElementType LINECOMMENT = new DtoTokenType("LineComment");
   IElementType LPAREN = new DtoTokenType("(");
   IElementType MINUS = new DtoTokenType("-");
   IElementType NUMBER = new DtoTokenType("Number");
@@ -65,7 +65,6 @@ public interface DtoTypes {
   IElementType RPAREN = new DtoTokenType(")");
   IElementType SEMICOLON = new DtoTokenType(";");
   IElementType STAR = new DtoTokenType("*");
-  IElementType STRING = new DtoTokenType("String");
   IElementType STRINGLITERAL = new DtoTokenType("StringLiteral");
 
   class Factory {

@@ -18,8 +18,7 @@ public class DtoSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final Map<IElementType, TextAttributesKey> ATTRIBUTES = new HashMap<>();
 
     static {
-        fillMap(ATTRIBUTES, LINE_COMMENT, DtoTypes.LINECOMMENT);
-        fillMap(ATTRIBUTES, BLOCK_COMMENT, DtoTypes.BLOCKCOMMENT);
+        fillMap(ATTRIBUTES, LINE_COMMENT, DtoTypes.COMMENT);
         fillMap(ATTRIBUTES, PARENTHESES, DtoTypes.LPAREN, DtoTypes.RPAREN);
         fillMap(ATTRIBUTES, BRACKETS, DtoTypes.RBRACK, DtoTypes.RBRACK);
         fillMap(ATTRIBUTES, BRACES, DtoTypes.LBRACE, DtoTypes.RBRACE);
@@ -35,7 +34,7 @@ public class DtoSyntaxHighlighter extends SyntaxHighlighterBase {
         fillMap(ATTRIBUTES, BUILTIN_FUNCTION, DtoTypes.MINUS, DtoTypes.HASH, DtoTypes.CARET, DtoTypes.DOLOR);
 
         fillMap(ATTRIBUTES, METADATA, DtoTypes.AT);
-        fillMap(ATTRIBUTES, STRING, DtoTypes.STRING);
+        fillMap(ATTRIBUTES, STRING, DtoTypes.STRINGLITERAL);
         fillMap(ATTRIBUTES, NUMBER, DtoTypes.NUMBER);
     }
 

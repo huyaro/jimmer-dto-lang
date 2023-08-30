@@ -11,6 +11,6 @@ public interface DtoNestedAnnotation extends PsiElement {
   DtoAnnotationArguments getAnnotationArguments();
 
   @NotNull
-  DtoQualifiedName getQualifiedName();
+  DtoAnnotationName getAnnotationName();
 
 }

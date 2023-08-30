@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class DtoParserDefinition implements ParserDefinition {
 
     public static final IFileElementType FILE = new IFileElementType(DtoLanguage.INSTANCE);
-    public static final TokenSet STRING_LITERALS = TokenSet.create(DtoTypes.STRING, DtoTypes.QUALIFIED_NAME);
+    public static final TokenSet STRING_LITERALS = TokenSet.create(DtoTypes.STRINGLITERAL, DtoTypes.QUALIFIED_NAME);
 
     @NotNull
     @Override
