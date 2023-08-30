@@ -5,6 +5,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import dev.huyaro.lang.psi.DtoTokenSets;
 import dev.huyaro.lang.psi.DtoTypes;
 import kotlinx.html.META;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,8 @@ public class DtoSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final Map<IElementType, TextAttributesKey> ATTRIBUTES = new HashMap<>();
 
     static {
-        fillMap(ATTRIBUTES, LINE_COMMENT, DtoTypes.COMMENT);
+        fillMap(ATTRIBUTES, LINE_COMMENT, DtoTokenSets.LINE_COMMENT);
+        fillMap(ATTRIBUTES, BLOCK_COMMENT, DtoTokenSets.BLOCK_COMMENT);
         fillMap(ATTRIBUTES, PARENTHESES, DtoTypes.LPAREN, DtoTypes.RPAREN);
         fillMap(ATTRIBUTES, BRACKETS, DtoTypes.RBRACK, DtoTypes.RBRACK);
         fillMap(ATTRIBUTES, BRACES, DtoTypes.LBRACE, DtoTypes.RBRACE);

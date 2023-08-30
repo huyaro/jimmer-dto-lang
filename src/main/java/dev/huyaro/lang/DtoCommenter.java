@@ -14,13 +14,13 @@ public class DtoCommenter implements Commenter {
   @Nullable
   @Override
   public String getBlockCommentPrefix() {
-    return "/*";
+    return null;
   }
 
   @Nullable
   @Override
   public String getBlockCommentSuffix() {
-    return "*/";
+    return null;
   }
 
   @Nullable

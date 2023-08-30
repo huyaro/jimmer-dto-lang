@@ -30,7 +30,7 @@ public class DtoParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public TokenSet getCommentTokens() {
-        return DtoTokenSets.COMMENTS;
+        return TokenSet.create(DtoTokenSets.LINE_COMMENT,DtoTokenSets.BLOCK_COMMENT);
     }
 
     @NotNull

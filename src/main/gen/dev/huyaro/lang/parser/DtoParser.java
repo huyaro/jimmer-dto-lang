@@ -594,89 +594,75 @@ public class DtoParser implements PsiParser, LightPsiParser {
   // annotation*
   //     modifier* Identifier
   //     (':' Identifier (',' Identifier)*)?
-  //     dtoBody|EOL
+  //     dtoBody
   public static boolean dtoType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dtoType")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, DTO_TYPE, "<dto type>");
     r = dtoType_0(b, l + 1);
-    if (!r) r = consumeToken(b, EOL);
+    r = r && dtoType_1(b, l + 1);
+    r = r && Identifier(b, l + 1);
+    r = r && dtoType_3(b, l + 1);
+    r = r && dtoBody(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   // annotation*
-  //     modifier* Identifier
-  //     (':' Identifier (',' Identifier)*)?
-  //     dtoBody
   private static boolean dtoType_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "dtoType_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = dtoType_0_0(b, l + 1);
-    r = r && dtoType_0_1(b, l + 1);
-    r = r && Identifier(b, l + 1);
-    r = r && dtoType_0_3(b, l + 1);
-    r = r && dtoBody(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // annotation*
-  private static boolean dtoType_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_0")) return false;
     while (true) {
       int c = current_position_(b);
       if (!annotation(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "dtoType_0_0", c)) break;
+      if (!empty_element_parsed_guard_(b, "dtoType_0", c)) break;
     }
     return true;
   }
 
   // modifier*
-  private static boolean dtoType_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_1")) return false;
+  private static boolean dtoType_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_1")) return false;
     while (true) {
       int c = current_position_(b);
       if (!modifier(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "dtoType_0_1", c)) break;
+      if (!empty_element_parsed_guard_(b, "dtoType_1", c)) break;
     }
     return true;
   }
 
   // (':' Identifier (',' Identifier)*)?
-  private static boolean dtoType_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_3")) return false;
-    dtoType_0_3_0(b, l + 1);
+  private static boolean dtoType_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3")) return false;
+    dtoType_3_0(b, l + 1);
     return true;
   }
 
   // ':' Identifier (',' Identifier)*
-  private static boolean dtoType_0_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_3_0")) return false;
+  private static boolean dtoType_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COLON);
     r = r && Identifier(b, l + 1);
-    r = r && dtoType_0_3_0_2(b, l + 1);
+    r = r && dtoType_3_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // (',' Identifier)*
-  private static boolean dtoType_0_3_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_3_0_2")) return false;
+  private static boolean dtoType_3_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0_2")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!dtoType_0_3_0_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "dtoType_0_3_0_2", c)) break;
+      if (!dtoType_3_0_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "dtoType_3_0_2", c)) break;
     }
     return true;
   }
 
   // ',' Identifier
-  private static boolean dtoType_0_3_0_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "dtoType_0_3_0_2_0")) return false;
+  private static boolean dtoType_3_0_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "dtoType_3_0_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
@@ -775,49 +761,34 @@ public class DtoParser implements PsiParser, LightPsiParser {
   //     (
   //     '.' '{' importedType (',' importedType)* '}'
   //     | 'as' Identifier
-  //     )?|EOL
+  //     )?
   public static boolean importStatement(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "importStatement")) return false;
-    if (!nextTokenIs(b, "<import statement>", EOL, IMPORT)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, IMPORT_STATEMENT, "<import statement>");
-    r = importStatement_0(b, l + 1);
-    if (!r) r = consumeToken(b, EOL);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // 'import' Identifier ('.' Identifier)*
-  //     (
-  //     '.' '{' importedType (',' importedType)* '}'
-  //     | 'as' Identifier
-  //     )?
-  private static boolean importStatement_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0")) return false;
+    if (!nextTokenIs(b, IMPORT)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, IMPORT);
     r = r && Identifier(b, l + 1);
-    r = r && importStatement_0_2(b, l + 1);
-    r = r && importStatement_0_3(b, l + 1);
-    exit_section_(b, m, null, r);
+    r = r && importStatement_2(b, l + 1);
+    r = r && importStatement_3(b, l + 1);
+    exit_section_(b, m, IMPORT_STATEMENT, r);
     return r;
   }
 
   // ('.' Identifier)*
-  private static boolean importStatement_0_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_2")) return false;
+  private static boolean importStatement_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_2")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!importStatement_0_2_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "importStatement_0_2", c)) break;
+      if (!importStatement_2_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "importStatement_2", c)) break;
     }
     return true;
   }
 
   // '.' Identifier
-  private static boolean importStatement_0_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_2_0")) return false;
+  private static boolean importStatement_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, DOT);
@@ -830,51 +801,51 @@ public class DtoParser implements PsiParser, LightPsiParser {
   //     '.' '{' importedType (',' importedType)* '}'
   //     | 'as' Identifier
   //     )?
-  private static boolean importStatement_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3")) return false;
-    importStatement_0_3_0(b, l + 1);
+  private static boolean importStatement_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3")) return false;
+    importStatement_3_0(b, l + 1);
     return true;
   }
 
   // '.' '{' importedType (',' importedType)* '}'
   //     | 'as' Identifier
-  private static boolean importStatement_0_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3_0")) return false;
+  private static boolean importStatement_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = importStatement_0_3_0_0(b, l + 1);
-    if (!r) r = importStatement_0_3_0_1(b, l + 1);
+    r = importStatement_3_0_0(b, l + 1);
+    if (!r) r = importStatement_3_0_1(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // '.' '{' importedType (',' importedType)* '}'
-  private static boolean importStatement_0_3_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3_0_0")) return false;
+  private static boolean importStatement_3_0_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3_0_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, DOT, LBRACE);
     r = r && importedType(b, l + 1);
-    r = r && importStatement_0_3_0_0_3(b, l + 1);
+    r = r && importStatement_3_0_0_3(b, l + 1);
     r = r && consumeToken(b, RBRACE);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // (',' importedType)*
-  private static boolean importStatement_0_3_0_0_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3_0_0_3")) return false;
+  private static boolean importStatement_3_0_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3_0_0_3")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!importStatement_0_3_0_0_3_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "importStatement_0_3_0_0_3", c)) break;
+      if (!importStatement_3_0_0_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "importStatement_3_0_0_3", c)) break;
     }
     return true;
   }
 
   // ',' importedType
-  private static boolean importStatement_0_3_0_0_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3_0_0_3_0")) return false;
+  private static boolean importStatement_3_0_0_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3_0_0_3_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, COMMA);
@@ -884,8 +855,8 @@ public class DtoParser implements PsiParser, LightPsiParser {
   }
 
   // 'as' Identifier
-  private static boolean importStatement_0_3_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "importStatement_0_3_0_1")) return false;
+  private static boolean importStatement_3_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "importStatement_3_0_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, KEY_AS);

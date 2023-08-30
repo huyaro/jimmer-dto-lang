@@ -29,7 +29,10 @@ SPACE=[ \t\n\x0B\f\r]+
 ID=[a-zA-Z_0-9]+
 STRINGLITERAL=(\"([\u4e00-\u9fa5\uff00-\uffff]|[^\"])*\")|('[a-zA-Z0-9_.]*')
 NUMBER=-?(0|[1-9][0-9]*)(\.[0-9]+)?([e|E][+-]?[0-9]+)?
-COMMENT="/"\*(.|\n)*?\*"/"|"//".*\n
+LINE_COMMENT="//"[^\r\n]*
+BLOCK_COMMENT="/*"[*\r\s\.]*"*/"
+
+%state BLOCK_COMMENT_STATE
 
 %%
 <YYINITIAL> {
@@ -65,8 +68,12 @@ COMMENT="/"\*(.|\n)*?\*"/"|"//".*\n
   {ID}                  { return ID; }
   {STRINGLITERAL}       { return STRINGLITERAL; }
   {NUMBER}              { return NUMBER; }
-  {COMMENT}             { return COMMENT; }
-
+  {LINE_COMMENT}         { return DtoTokenSets.LINE_COMMENT; }
+    "/*"                  { yybegin(BLOCK_COMMENT_STATE); }
 }
-
+<BLOCK_COMMENT_STATE> {
+    [^"*/"]              {}
+    [^\r\n]              {}
+    "*/"                 { yybegin(YYINITIAL); return DtoTokenSets.BLOCK_COMMENT; }
+}
 [^] { return BAD_CHARACTER; }

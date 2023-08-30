@@ -41,10 +41,8 @@ public interface DtoTypes {
   IElementType CARET = new DtoTokenType("^");
   IElementType COLON = new DtoTokenType(":");
   IElementType COMMA = new DtoTokenType(",");
-  IElementType COMMENT = new DtoTokenType("Comment");
   IElementType DOLOR = new DtoTokenType("$");
   IElementType DOT = new DtoTokenType(".");
-  IElementType EOL = new DtoTokenType("EOL");
   IElementType EQUAL = new DtoTokenType("=");
   IElementType HASH = new DtoTokenType("#");
   IElementType ID = new DtoTokenType("Id");

@@ -40,9 +40,9 @@ public class DtoDtoTypeImpl extends ASTWrapperPsiElement implements DtoDtoType {
   }
 
   @Override
-  @Nullable
+  @NotNull
   public DtoDtoBody getDtoBody() {
-    return findChildByClass(DtoDtoBody.class);
+    return findNotNullChildByClass(DtoDtoBody.class);
   }
 
   @Override
