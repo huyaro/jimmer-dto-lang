@@ -22,6 +22,10 @@
 
     <change-notes>
         <![CDATA[
+      <h4>0.0.7</h4>
+      <ul>
+        <li>The target file of the DTO jump is changed to the generated source code file</li>
+      </ul>
       <h4>0.0.6</h4>
       <ul>
         <li>Fix the bug that dto fails to jump to class in multi-module projects</li>

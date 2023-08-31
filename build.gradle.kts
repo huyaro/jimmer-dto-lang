@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.huyaro.lang"
-version = "0.0.6"
+version = "0.0.7"
 
 repositories {
     mavenCentral()
