@@ -1,10 +1,11 @@
 package dev.huyaro.lang;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.navigationToolbar.StructureAwareNavBarModelExtension;
 import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import dev.huyaro.lang.psi.*;
+import com.intellij.util.PlatformIcons;
+import dev.huyaro.lang.psi.DtoDtoType;
+import dev.huyaro.lang.psi.DtoExplicitProp;
+import dev.huyaro.lang.psi.DtoFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +39,7 @@ public class DtoStructureAwareNavbar extends StructureAwareNavBarModelExtension 
             return type.getModifierList().isEmpty() ? DtoIcons.VIEW_TYPE : DtoIcons.INPUT_TYPE;
         }
         if (object instanceof DtoExplicitProp) {
-            return AllIcons.Nodes.Property;
+            return PlatformIcons.FIELD_ICON;
         }
 
         return null;

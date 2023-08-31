@@ -1,17 +1,17 @@
 package dev.huyaro.lang;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
-import dev.huyaro.lang.psi.*;
+import dev.huyaro.lang.psi.DtoDtoType;
+import dev.huyaro.lang.psi.DtoExplicitProp;
+import dev.huyaro.lang.psi.DtoFile;
 import dev.huyaro.lang.psi.impl.DtoDtoTypeImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,7 +68,7 @@ public class DtoStructureViewElement implements StructureViewTreeElement, Sortab
                     return type.getModifierList().isEmpty() ? DtoIcons.VIEW_TYPE : DtoIcons.INPUT_TYPE;
                 }
                 if (myElement instanceof DtoExplicitProp) {
-                    return AllIcons.Nodes.Property;
+                    return PlatformIcons.FIELD_ICON;
                 }
                 return null;
             }

@@ -22,6 +22,10 @@
 
     <change-notes>
         <![CDATA[
+      <h4>0.0.6</h4>
+      <ul>
+        <li>Fix the bug that dto fails to jump to class in multi-module projects</li>
+      </ul>
       <h4>0.0.5</h4>
       <ul>
         <li>Fixed an issue where block comments could not be used in DTO files</li>
