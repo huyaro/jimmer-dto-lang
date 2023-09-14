@@ -91,7 +91,7 @@ class GeneratorUI(
     private fun generateDto() {
         // apply()后界面的变更项才会生效
         genPanel.apply()
-        // 循环判断并创建文件
+        // 依据文件写入选项判断并操作文件
         data.clsToFile.forEach { (cls, file) ->
             val relativeFilePath = file.replace(data.moduleRootDir, "")
             if (data.writeMode == WriteMode.Skipping) {
@@ -111,7 +111,7 @@ class GeneratorUI(
                     }
             }
             val dtoDir = Paths.get(file).parent.toString()
-            val dtoRoot = VfsUtil.createDirectoryIfMissing(dtoDir)
+            val dtoRoot = VfsUtil.createDirectories(dtoDir)
             // write file content
             WriteCommandAction.runWriteCommandAction(project, Computable {
                 dtoRoot
