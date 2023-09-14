@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.structure;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
@@ -9,6 +9,8 @@ import com.intellij.psi.NavigatablePsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.ContainerUtil;
+import dev.huyaro.lang.DtoIcons;
+import dev.huyaro.lang.DtoUtil;
 import dev.huyaro.lang.psi.DtoDtoType;
 import dev.huyaro.lang.psi.DtoExplicitProp;
 import dev.huyaro.lang.psi.DtoFile;

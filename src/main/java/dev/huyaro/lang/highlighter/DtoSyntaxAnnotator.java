@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.highlighter;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -32,14 +32,14 @@ public class DtoSyntaxAnnotator implements Annotator {
         @Override
         public void visitAnnotationName(@NotNull DtoAnnotationName o) {
             super.visitAnnotationName(o);
-            applyTextAttributes(o, DTO_ANNOTATION_NAME);
+            applyTextAttributes(o);
         }
 
-        private void applyTextAttributes(DtoAnnotationName ele, TextAttributesKey attributes) {
+        private void applyTextAttributes(DtoAnnotationName ele) {
             if (null == ele) return;
             myHolder.newSilentAnnotation(HighlightSeverity.INFORMATION)
                     .range(ele.getTextRange())
-                    .textAttributes(attributes)
+                    .textAttributes(DtoSyntaxAnnotator.DTO_ANNOTATION_NAME)
                     .create();
         }
     }

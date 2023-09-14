@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.structure;
 
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;

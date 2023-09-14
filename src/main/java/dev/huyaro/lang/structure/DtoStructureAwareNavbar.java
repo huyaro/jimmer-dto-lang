@@ -1,8 +1,11 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.structure;
 
 import com.intellij.ide.navigationToolbar.StructureAwareNavBarModelExtension;
 import com.intellij.lang.Language;
 import com.intellij.util.PlatformIcons;
+import dev.huyaro.lang.DtoIcons;
+import dev.huyaro.lang.DtoLanguage;
+import dev.huyaro.lang.DtoUtil;
 import dev.huyaro.lang.psi.DtoDtoType;
 import dev.huyaro.lang.psi.DtoExplicitProp;
 import dev.huyaro.lang.psi.DtoFile;

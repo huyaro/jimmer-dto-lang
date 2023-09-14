@@ -1,19 +1,19 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.highlighter;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import dev.huyaro.lang.DtoLexerAdapter;
 import dev.huyaro.lang.psi.DtoTokenSets;
 import dev.huyaro.lang.psi.DtoTypes;
-import kotlinx.html.META;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.huyaro.lang.DtoSyntaxHighlighterColors.*;
+import static dev.huyaro.lang.highlighter.DtoSyntaxHighlighterColors.*;
 
 public class DtoSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final Map<IElementType, TextAttributesKey> ATTRIBUTES = new HashMap<>();

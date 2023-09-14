@@ -22,9 +22,14 @@
 
     <change-notes>
         <![CDATA[
+      <h4>0.0.8</h4>
+      <ul>
+        <li>Supports the right-click menu of entity source files
+            to generate dto files (contains all fields by default)</li>
+      </ul>
       <h4>0.0.7</h4>
       <ul>
-        <li>The target file of the DTO jump is changed to the generated source code file</li>
+        <li>Navigate to the generated source class from the dto file</li>
       </ul>
       <h4>0.0.6</h4>
       <ul>
@@ -71,13 +76,13 @@
         <lang.parserDefinition language="dto"
                                implementationClass="dev.huyaro.lang.DtoParserDefinition"/>
         <lang.syntaxHighlighterFactory language="dto"
-                                       implementationClass="dev.huyaro.lang.DtoSyntaxHighlighterFactory"/>
-        <annotator language="dto" implementationClass="dev.huyaro.lang.DtoSyntaxAnnotator"/>
+                                       implementationClass="dev.huyaro.lang.highlighter.DtoSyntaxHighlighterFactory"/>
+        <annotator language="dto" implementationClass="dev.huyaro.lang.highlighter.DtoSyntaxAnnotator"/>
         <completion.contributor language="dto"
                                 implementationClass="dev.huyaro.lang.DtoCompletionContributor"/>
         <lang.psiStructureViewFactory language="dto"
-                                      implementationClass="dev.huyaro.lang.DtoStructureViewFactory" />
-        <navbar implementation="dev.huyaro.lang.DtoStructureAwareNavbar"/>
+                                      implementationClass="dev.huyaro.lang.structure.DtoStructureViewFactory" />
+        <navbar implementation="dev.huyaro.lang.structure.DtoStructureAwareNavbar"/>
         <lang.commenter language="dto"
                         implementationClass="dev.huyaro.lang.DtoCommenter"/>
         <spellchecker.support language="dto"
@@ -86,7 +91,7 @@
                                         implementationClass="dev.huyaro.lang.DtoLineMarkerProvider" />
     </extensions>
     <actions>
-        <action id="GeneratorAction" class="dev.huyaro.lang.ui.GeneratorAction" text="Generate Jimmer Dto"
+        <action id="GeneratorAction" class="dev.huyaro.lang.action.GeneratorAction" text="Generate Jimmer Dto"
                 description="Generate dto file" icon="dev.huyaro.lang.DtoIcons.FILE">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>

@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.highlighter;
 
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.HighlighterColors;

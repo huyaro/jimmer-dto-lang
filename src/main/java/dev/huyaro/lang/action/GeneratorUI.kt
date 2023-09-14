@@ -1,4 +1,4 @@
-package dev.huyaro.lang.ui
+package dev.huyaro.lang.action
 
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.module.Module

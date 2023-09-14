@@ -1,4 +1,4 @@
-package dev.huyaro.lang.ui
+package dev.huyaro.lang.action
 
 /**
  * ...description...
