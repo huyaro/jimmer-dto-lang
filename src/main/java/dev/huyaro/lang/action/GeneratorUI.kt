@@ -69,7 +69,7 @@ class GeneratorUI(
                     .resizableColumn()
                 button("Generate") {
                     generateDto()
-                }
+                }.enabled(data.clsToFile.isNotEmpty())
             }.layout(RowLayout.INDEPENDENT)
                 .topGap(TopGap.MEDIUM)
         }
@@ -83,6 +83,7 @@ class GeneratorUI(
         panel.add(genPanel)
         return panel;
     }
+
 
     /**
      * 生成dto文件
@@ -103,8 +104,8 @@ class GeneratorUI(
                 // override 模式直接判断删除文件
                 Paths.get(file)
                     .takeIf { it.exists() }
-                    .apply {
-                        Files.delete(this)
+                    ?.let {
+                        Files.delete(it)
                         val log = "\n[Deleted] => $relativeFilePath"
                         txtLog.component.insert(log, txtLog.component.text.length)
                     }
@@ -128,5 +129,4 @@ class GeneratorUI(
             })
         }
     }
-
 }

@@ -1,7 +1,7 @@
 package dev.huyaro.lang.action
 
 /**
- * ...description...
+ * ui data
  *
  * @author huyaro
  * @date 2023-09-12

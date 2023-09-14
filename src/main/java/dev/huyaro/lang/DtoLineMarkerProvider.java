@@ -8,7 +8,6 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,7 +16,6 @@ import dev.huyaro.lang.psi.DtoDtoType;
 import dev.huyaro.lang.psi.DtoIdentifier;
 import dev.huyaro.lang.psi.DtoModifier;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import javax.swing.*;
 import java.io.File;
@@ -46,7 +44,7 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
                         ? "Abstract Dto don't generate any files"
                         : "Navigate to class [" + idElement.getText() + ".class]";
                 // abstract 不用跳转
-                GutterIconNavigationHandler<PsiElement> navHandler = isAbsDtoType ? null : handlerGotoClass(element);
+                GutterIconNavigationHandler<PsiElement> navHandler = isAbsDtoType ? null : navigateToClass(element);
                 Icon typeIcon = modifierList.isEmpty() ? DtoIcons.VIEW_TYPE : DtoIcons.INPUT_TYPE;
 
                 return new LineMarkerInfo<>(idElement, idElement.getTextRange(), typeIcon, t -> tooltip,
@@ -56,7 +54,7 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
         return null;
     }
 
-    private GutterIconNavigationHandler<PsiElement> handlerGotoClass(@NotNull PsiElement element) {
+    private GutterIconNavigationHandler<PsiElement> navigateToClass(@NotNull PsiElement element) {
         return (evt, ele) -> {
             Project project = element.getProject();
             VirtualFile dtoFile = element.getContainingFile().getVirtualFile();

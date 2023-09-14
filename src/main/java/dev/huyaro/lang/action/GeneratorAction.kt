@@ -60,7 +60,7 @@ class GeneratorAction : AnAction() {
             files.map { fl ->
                 val clsName = fl.path
                     .replace(sourceDir, "")
-                    .substring(1)
+                    .substring(1) // remove prefix /
                     .replace(File.separator, ".")
                     .replace(Lang.Kotlin.value, "")
                     .replace(Lang.JAVA.value, "")
