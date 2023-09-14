@@ -44,7 +44,7 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
                         .anyMatch(txt -> Objects.equals(txt.strip(), "abstract"));
                 String tooltip = isAbsDtoType
                         ? "Abstract Dto don't generate any files"
-                        : "Jump to class [" + idElement.getText() + ".class]";
+                        : "Navigate to class [" + idElement.getText() + ".class]";
                 // abstract 不用跳转
                 GutterIconNavigationHandler<PsiElement> navHandler = isAbsDtoType ? null : handlerGotoClass(element);
                 Icon typeIcon = modifierList.isEmpty() ? DtoIcons.VIEW_TYPE : DtoIcons.INPUT_TYPE;
@@ -63,7 +63,7 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
             Module module = findModuleForFile(dtoFile, project);
 
             if (module != null) {
-                Pair<String, String> sourceAndBuildDir = getSourceAndBuildDir(module);
+                Pair<String, String> sourceAndBuildDir = DtoUtil.getSourceAndBuildDir(module);
                 if (sourceAndBuildDir != null) {
                     final String sourceRoot = sourceAndBuildDir.getFirst();
                     final String buildRoot = sourceAndBuildDir.getSecond();
@@ -90,40 +90,5 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
                 }
             }
         };
-    }
-
-    /**
-     * 获取source 和 build 目录
-     *
-     * @param module 当前模块
-     * @return source and build dir
-     */
-    private Pair<String, String> getSourceAndBuildDir(Module module) {
-        // 获取当前模块下被标记为源码的所有目录(包含源码目录及asp/ksp编译后的目录)
-        List<VirtualFile> sourceRoots = ModuleRootManager.getInstance(module)
-                .getSourceRoots(JavaSourceRootType.SOURCE);
-        // 只可能有source与build目录, 再多了也无法区分
-        if (sourceRoots.size() == 2) {
-            final List<String> mainDirSpec = List.of("src/main/java", "src/main/kotlin");
-            VirtualFile sourceRoot = null;
-            for (String spec : mainDirSpec) {
-                for (VirtualFile root : sourceRoots) {
-                    if (Paths.get(root.getPath()).endsWith(spec)) {
-                        sourceRoot = root;
-                        break;
-                    }
-                }
-            }
-            if (null != sourceRoot) {
-                String sourceDir = sourceRoot.getPath();
-                VirtualFile virtualBuildDir = sourceRoots.stream()
-                        .filter(p -> !p.getPath().equals(sourceDir))
-                        .findFirst()
-                        .orElse(null);
-                assert virtualBuildDir != null;
-                return new Pair<>(sourceDir, virtualBuildDir.getPath());
-            }
-        }
-        return null;
     }
 }

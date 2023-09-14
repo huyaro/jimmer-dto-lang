@@ -60,6 +60,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -84,4 +85,10 @@
         <codeInsight.lineMarkerProvider language="dto"
                                         implementationClass="dev.huyaro.lang.DtoLineMarkerProvider" />
     </extensions>
+    <actions>
+        <action id="GeneratorAction" class="dev.huyaro.lang.ui.GeneratorAction" text="Generate Jimmer Dto"
+                description="Generate dto file" icon="dev.huyaro.lang.DtoIcons.FILE">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
 </idea-plugin>
