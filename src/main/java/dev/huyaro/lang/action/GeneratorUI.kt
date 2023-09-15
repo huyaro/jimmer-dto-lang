@@ -1,6 +1,7 @@
 package dev.huyaro.lang.action
 
 import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
@@ -51,9 +52,12 @@ class GeneratorUI(
                 }
             }.bind(data::writeMode)
             row("Output Path: ") {
-                textField()
-                    .bindText(data::outputDir)
+                val txtBrowser = textFieldWithBrowseButton(
+                    project = project,
+                    fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                ).bindText(data::outputDir)
                     .horizontalAlign(HorizontalAlign.FILL)
+                txtBrowser.component.isEditable = false
             }.layout(RowLayout.PARENT_GRID)
             row("Classes: ") {
                 txtLog = textArea()
