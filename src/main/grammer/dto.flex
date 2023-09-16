@@ -61,6 +61,7 @@ BLOCK_COMMENT="/*"[*\r\s\.]*"*/"
   "->"                  { return RIGHT_ARROW; }
   "abstract"            { return ABSTRACT; }
   "input"               { return INPUT; }
+  "input-only"          { return INPUT_ONLY; }
   "import"              { return IMPORT; }
   "as"                  { return KEY_AS; }
 

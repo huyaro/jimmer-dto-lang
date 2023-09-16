@@ -904,7 +904,7 @@ public class DtoParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, MODIFIER, "<modifier>");
     r = consumeToken(b, ABSTRACT);
     if (!r) r = consumeToken(b, INPUT);
-    if (!r) r = consumeToken(b, "input-only");
+    if (!r) r = consumeToken(b, INPUT_ONLY);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

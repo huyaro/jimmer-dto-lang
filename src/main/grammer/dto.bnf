@@ -37,6 +37,7 @@
     RIGHT_ARROW  = '->'
     ABSTRACT     = 'abstract'
     INPUT        = 'input'
+    INPUT_ONLY   = 'input-only'
     IMPORT       = 'import'
     KEY_AS       = 'as'
 

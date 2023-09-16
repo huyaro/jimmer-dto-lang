@@ -1,13 +1,24 @@
 package dev.huyaro.lang;
 
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import dev.huyaro.lang.psi.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +49,7 @@ public final class DtoUtil {
      * @param module 当前模块
      * @return source and build dir
      */
-    public static Pair<String, String> getSourceAndBuildDir(Module module) {
+    public static @NotNull Pair<String, String> getSourceAndBuildDir(Module module) {
         // 获取当前模块下被标记为源码的所有目录(包含源码目录及asp/ksp编译后的目录)
         List<VirtualFile> sourceRoots = ModuleRootManager.getInstance(module)
                 .getSourceRoots(JavaSourceRootType.SOURCE);
@@ -81,5 +92,29 @@ public final class DtoUtil {
                 .map(p -> sourceDir.replace(p, ""))
                 .findFirst()
                 .orElse("");
+    }
+
+    /**
+     * 获取当前模块
+     *
+     * @param project 项目
+     * @param file    虚拟文件
+     * @return 模块
+     */
+    public static Module getCurrentModule(Project project, VirtualFile file) {
+        var fileIndex = ProjectFileIndex.getInstance(project);
+        return fileIndex.getModuleForFile(file);
+    }
+
+    /**
+     * 跳转文件
+     */
+    public static void navigateTo(Project project, Path filePath) {
+        if(Files.exists(filePath)) {
+            VirtualFile classFile = LocalFileSystem.getInstance().findFileByPath(filePath.toAbsolutePath().toString());
+            assert classFile != null;
+            OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, classFile);
+            FileEditorManager.getInstance(project).openEditor(openFileDescriptor, true);
+        }
     }
 }

@@ -54,7 +54,8 @@ class GeneratorUI(
             row("Output Path: ") {
                 val txtBrowser = textFieldWithBrowseButton(
                     project = project,
-                    fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                    fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+                    fileChosen = { vf -> vf.path }
                 ).bindText(data::outputDir)
                     .horizontalAlign(HorizontalAlign.FILL)
                 txtBrowser.component.isEditable = false

@@ -1,5 +1,6 @@
 package dev.huyaro.lang.action
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -33,12 +34,15 @@ class GeneratorAction : AnAction() {
             Messages.showInfoMessage(project, "Please choose file first!", "Usage Help")
             return
         }
-        val fileIndex = ProjectFileIndex.getInstance(project)
-        val module = fileIndex.getModuleForFile(files[0])
+        val module = DtoUtil.getCurrentModule(project, files[0]);
         module?.let {
             val data = buildBindData(project, module, files)
             GeneratorUI(project, module, data).show()
         }
+    }
+
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT;
     }
 
     override fun update(evt: AnActionEvent) {
@@ -58,12 +62,13 @@ class GeneratorAction : AnAction() {
         val outputDir = Paths.get(sourceDir).resolveSibling(Lang.DTO.value)
         val entitiesData =
             files.map { fl ->
-                val clsName = fl.path
-                    .replace(sourceDir, "")
-                    .substring(1) // remove prefix /
-                    .replace(File.separator, ".")
+                val fileNoSuffix = fl.name
                     .replace(Lang.Kotlin.value, "")
                     .replace(Lang.JAVA.value, "")
+                val clsName = Paths.get(fl.path).parent.toString()
+                    .replace(sourceDir, "")
+                    .substring(1) // remove prefix /
+                    .replace(File.separator, ".") + ".$fileNoSuffix"
                 // java 与 kotlin 通用的查找class的方式
                 JavaPsiFacade.getInstance(project).findClass(clsName, module.moduleScope)
             }.filter { cls ->

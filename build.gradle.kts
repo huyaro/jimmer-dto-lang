@@ -24,7 +24,7 @@ intellij {
     type.set("IU") // Target IDE Platform
     downloadSources.set(false)
 
-    plugins.set(listOf("com.intellij.java"))
+    plugins.set(listOf("com.intellij.java","org.jetbrains.kotlin"))
 }
 
 tasks {

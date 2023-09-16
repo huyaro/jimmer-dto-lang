@@ -48,6 +48,7 @@ public interface DtoTypes {
   IElementType ID = new DtoTokenType("Id");
   IElementType IMPORT = new DtoTokenType("import");
   IElementType INPUT = new DtoTokenType("input");
+  IElementType INPUT_ONLY = new DtoTokenType("input-only");
   IElementType KEY_AS = new DtoTokenType("as");
   IElementType LANGLE = new DtoTokenType("<");
   IElementType LBRACE = new DtoTokenType("{");

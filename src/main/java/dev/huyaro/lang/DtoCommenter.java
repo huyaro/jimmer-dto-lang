@@ -1,38 +1,7 @@
 package dev.huyaro.lang;
 
-import com.intellij.lang.Commenter;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.java.JavaCommenter;
 
-public class DtoCommenter implements Commenter {
-
-  @Nullable
-  @Override
-  public String getLineCommentPrefix() {
-    return "//";
-  }
-
-  @Nullable
-  @Override
-  public String getBlockCommentPrefix() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public String getBlockCommentSuffix() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public String getCommentedBlockCommentPrefix() {
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public String getCommentedBlockCommentSuffix() {
-    return null;
-  }
+public class DtoCommenter extends JavaCommenter {
 
 }

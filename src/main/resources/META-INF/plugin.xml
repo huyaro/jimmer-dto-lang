@@ -75,6 +75,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
+    <depends>org.jetbrains.kotlin</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -90,14 +91,18 @@
         <completion.contributor language="dto"
                                 implementationClass="dev.huyaro.lang.DtoCompletionContributor"/>
         <lang.psiStructureViewFactory language="dto"
-                                      implementationClass="dev.huyaro.lang.structure.DtoStructureViewFactory" />
+                                      implementationClass="dev.huyaro.lang.structure.DtoStructureViewFactory"/>
         <navbar implementation="dev.huyaro.lang.structure.DtoStructureAwareNavbar"/>
         <lang.commenter language="dto"
                         implementationClass="dev.huyaro.lang.DtoCommenter"/>
+        <lang.braceMatcher language="dto"
+                           implementationClass="dev.huyaro.lang.highlighter.DtoBraceMatcher"/>
         <spellchecker.support language="dto"
                               implementationClass="dev.huyaro.lang.DtoSpellcheckingStrategy"/>
         <codeInsight.lineMarkerProvider language="dto"
-                                        implementationClass="dev.huyaro.lang.DtoLineMarkerProvider" />
+                                        implementationClass="dev.huyaro.lang.provider.DtoLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JVM"
+                                        implementationClass="dev.huyaro.lang.provider.JvmLineMarketProvider"/>
     </extensions>
     <actions>
         <action id="GeneratorAction" class="dev.huyaro.lang.action.GeneratorAction" text="Generate Jimmer Dto"

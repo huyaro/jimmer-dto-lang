@@ -1,4 +1,4 @@
-package dev.huyaro.lang;
+package dev.huyaro.lang.provider;
 
 import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -12,6 +12,8 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import dev.huyaro.lang.DtoIcons;
+import dev.huyaro.lang.DtoUtil;
 import dev.huyaro.lang.psi.DtoDtoType;
 import dev.huyaro.lang.psi.DtoIdentifier;
 import dev.huyaro.lang.psi.DtoModifier;
@@ -26,6 +28,12 @@ import java.util.Objects;
 
 import static com.intellij.openapi.module.ModuleUtilCore.findModuleForFile;
 
+/**
+ * dto 文件跳转到asp/ksp生成的 java entity
+ *
+ * @author huyaro
+ * @date 2023-09-16
+ */
 public class DtoLineMarkerProvider implements LineMarkerProvider {
 
     @Override
@@ -62,30 +70,22 @@ public class DtoLineMarkerProvider implements LineMarkerProvider {
 
             if (module != null) {
                 Pair<String, String> sourceAndBuildDir = DtoUtil.getSourceAndBuildDir(module);
-                if (sourceAndBuildDir != null) {
-                    final String sourceRoot = sourceAndBuildDir.getFirst();
-                    final String buildRoot = sourceAndBuildDir.getSecond();
-                    final String dtoDirName = "dto";
+                final String sourceRoot = sourceAndBuildDir.getFirst();
+                final String buildRoot = sourceAndBuildDir.getSecond();
+                final String dtoDirName = "dto";
 
-                    Path sourceRootPath = Paths.get(sourceRoot);
-                    String suffixName = sourceRootPath.resolveSibling("java").equals(sourceRootPath)
-                            ? ".java" : ".kt";
+                Path sourceRootPath = Paths.get(sourceRoot);
+                String suffixName = sourceRootPath.resolveSibling("java").equals(sourceRootPath)
+                        ? ".java" : ".kt";
 
-                    // 将 src/main/java 替换成 src/main/dto 去构建dto生成的源码文件相对路径
-                    String sourceFile = sourceRootPath.resolveSibling(dtoDirName)
-                            .relativize(Paths.get(dtoFile.getPath()))
-                            .resolveSibling(dtoDirName)
-                            .resolve(ele.getText() + suffixName)
-                            .toString();
-                    // 构建完整的源码文件路径
-                    File fullSourceFile = Paths.get(buildRoot, sourceFile).toFile();
-                    if (fullSourceFile.exists()) {
-                        VirtualFile classFile = LocalFileSystem.getInstance().findFileByPath(fullSourceFile.getAbsolutePath());
-                        assert classFile != null;
-                        OpenFileDescriptor openFileDescriptor = new OpenFileDescriptor(project, classFile);
-                        FileEditorManager.getInstance(project).openEditor(openFileDescriptor, true);
-                    }
-                }
+                // 将 src/main/java 替换成 src/main/dto 去构建dto生成的源码文件相对路径
+                String sourceFile = sourceRootPath.resolveSibling(dtoDirName)
+                        .relativize(Paths.get(dtoFile.getPath()))
+                        .resolveSibling(dtoDirName)
+                        .resolve(ele.getText() + suffixName)
+                        .toString();
+                // 构建完整的源码文件路径并跳转
+                DtoUtil.navigateTo(project, Paths.get(buildRoot, sourceFile));
             }
         };
     }
