@@ -6,6 +6,7 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -48,12 +49,11 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
 
         Project project = element.getProject();
         VirtualFile file = element.getContainingFile().getVirtualFile();
-        Module module = DtoUtil.getCurrentModule(project, file);
+        Module module = ModuleUtilCore.findModuleForFile(file, project);
 
-        // java与kotlin不同的判断方式
+        // java与kotlin分别判断是否为@entity
         if (element instanceof PsiClass cls && cls.isInterface()) {
             isEntity = Arrays.stream(cls.getAnnotations())
-                    .filter(Objects::nonNull)
                     .anyMatch(ann -> Objects.equals(ann.getQualifiedName(), ANN_ENTITY));
             qualifiedName = cls.getQualifiedName();
             identifier = cls.getNameIdentifier();
@@ -64,16 +64,20 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
                 return;
             }
             qualifiedName = fqName.toString();
-            isEntity = Arrays.stream(Objects.requireNonNull(JavaPsiFacade.getInstance(project)
-                                    .findClass(qualifiedName, module.getModuleScope()))
-                            .getAnnotations())
-                    .filter(Objects::nonNull)
-                    .anyMatch(ann -> Objects.equals(ann.getQualifiedName(), ANN_ENTITY));
+            if (null != module) {
+                PsiClass psiKtCls = JavaPsiFacade.getInstance(project)
+                        .findClass(qualifiedName, module.getModuleScope());
+                if (null != psiKtCls) {
+                    isEntity = Arrays.stream(psiKtCls.getAnnotations())
+                            .anyMatch(ann -> Objects.equals(ann.getQualifiedName(), ANN_ENTITY));
+                }
+            }
         }
-        if (isEntity) {
+        if (isEntity && null != identifier) {
             String sourceDir = DtoUtil.getSourceAndBuildDir(module).first;
-            Path dtoFile = findDtoFile(file, sourceDir);
+            Path dtoFile = locateDtoFile(file, sourceDir);
 
+            // 定义不同颜色的图标去区分当前entity对应的dto文件是否存在
             Icon iconFile = DtoIcons.FILE_NOT_FOUND;
             String toolTip = "Create dto file";
             if (Files.exists(dtoFile)) {
@@ -82,22 +86,23 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
             }
 
             GutterIconNavigationHandler<PsiElement> navHandler = navigationHandler(project, dtoFile, qualifiedName);
-            RelatedItemLineMarkerInfo<PsiElement> toDtoFile =
+            RelatedItemLineMarkerInfo<PsiElement> dtoLineMarker =
                     NavigationGutterIconBuilder.create(iconFile)
                             .setTarget(element)
                             .setTooltipText(toolTip)
                             .createLineMarkerInfo(identifier, navHandler);
-            result.add(toDtoFile);
+            result.add(dtoLineMarker);
         }
     }
 
     /**
-     * 根据java/kt源文件查找dto文件
+     * 根据java/kt源文件定位dto文件路径
      *
-     * @param file 虚拟文件
+     * @param file      虚拟文件
+     * @param sourceDir 源码目录
      * @return dto文件完整路径
      */
-    private @NotNull Path findDtoFile(VirtualFile file, String sourceDir) {
+    private @NotNull Path locateDtoFile(VirtualFile file, String sourceDir) {
         String dtoSourceDir = Paths.get(sourceDir).resolveSibling("dto").toString();
         String dtoFileName = file.getName()
                 .replace(".java", ".dto")
@@ -118,16 +123,16 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
      */
     private GutterIconNavigationHandler<PsiElement> navigationHandler(Project project, Path dtoFile,
                                                                       String qualifiedName) {
-        return Files.exists(dtoFile) ? (evt, ele) -> {
-            // 导航到dto文件
-            DtoUtil.navigateTo(project, dtoFile);
-        } : (evt, ele) -> {
-            // 创建dto文件
-            JBPopupFactory.getInstance()
-                    .createConfirmation("Do You Want to Create a Dto File?", "Create", "Cancel",
-                            () -> createDtoFile(project, dtoFile, qualifiedName, ele), 0)
-                    .show(new RelativePoint(evt));
-        };
+        return Files.exists(dtoFile)
+                // 跳转到dto文件
+                ? (evt, ele) -> DtoUtil.navigateTo(project, dtoFile)
+                // 创建dto文件
+                : (evt, ele) ->
+                JBPopupFactory.getInstance()
+                        .createConfirmation("Do You Want to Create a Dto File?", "Create", "Cancel",
+                                () -> createDtoFile(project, dtoFile, qualifiedName, ele), 0)
+                        .show(new RelativePoint(evt));
+
     }
 
     /**
@@ -139,12 +144,12 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
      * @param ele           element
      */
     private static void createDtoFile(Project project, Path dtoFile, String qualifiedName, PsiElement ele) {
-        var dtoDir = dtoFile.getParent().toString();
+        String dtoDir = dtoFile.getParent().toString();
         VirtualFile dtoRoot;
         try {
             dtoRoot = VfsUtil.createDirectories(dtoDir);
         } catch (IOException e) {
-            throw new RuntimeException("Create Directories [" + dtoDir + "] Failed!");
+            throw new CreateDtoFieException("Create Directories [" + dtoDir + "] Failed!");
         }
 
         String[] namesArr = qualifiedName.split("\\.");
@@ -165,8 +170,14 @@ public class JvmLineMarketProvider extends RelatedItemLineMarkerProvider {
                 // Navigate after creating dto file
                 DtoUtil.navigateTo(project, dtoFile);
             } catch (IOException e) {
-                throw new RuntimeException("Create dto file [" + dtoFile + "] Failed!");
+                throw new CreateDtoFieException("Write file [" + dtoFile + "] Failed!");
             }
         });
+    }
+
+    private static class CreateDtoFieException extends RuntimeException {
+        public CreateDtoFieException(String message) {
+            super(message);
+        }
     }
 }

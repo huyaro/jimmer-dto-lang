@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleUtil
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectFileIndex
 import com.intellij.openapi.ui.Messages
@@ -34,7 +36,7 @@ class GeneratorAction : AnAction() {
             Messages.showInfoMessage(project, "Please choose file first!", "Usage Help")
             return
         }
-        val module = DtoUtil.getCurrentModule(project, files[0]);
+        val module = ModuleUtilCore.findModuleForFile(files[0], project)
         module?.let {
             val data = buildBindData(project, module, files)
             GeneratorUI(project, module, data).show()

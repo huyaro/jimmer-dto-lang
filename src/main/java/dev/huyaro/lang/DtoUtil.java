@@ -95,18 +95,6 @@ public final class DtoUtil {
     }
 
     /**
-     * 获取当前模块
-     *
-     * @param project 项目
-     * @param file    虚拟文件
-     * @return 模块
-     */
-    public static Module getCurrentModule(Project project, VirtualFile file) {
-        var fileIndex = ProjectFileIndex.getInstance(project);
-        return fileIndex.getModuleForFile(file);
-    }
-
-    /**
      * 跳转文件
      */
     public static void navigateTo(Project project, Path filePath) {
